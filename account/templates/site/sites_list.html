@@ -1,0 +1,79 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Sites
+{% endblock %}
+{% load static %} 
+{% block activeSettings %} {% include 'active_bar.html' %} {% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="row mb-3">
+        <form method="GET" style="{% if page %}margin: 20px 0px;{% else %}margin-top: 13%;{% endif %}">
+            {% csrf_token %}
+            <div class="row height d-flex justify-content-center align-items-center">
+                <div class="col-md-5 mb-2">
+                    <div class="form" style="position: relative;">
+                        <i class="fa fa-search" style="position: absolute; top:12px; left: 17px; color: #133356;"></i>
+                        {{ filtredData.form.search }}
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <a href="{% url 'create_site' %}" class="btn btn-secondary" style="background-color: #0e2a5b; border-color: transparent; box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);">Nouveau</a>
+                </div>
+            </div>
+        </form> 
+        {% if page %}
+        <section class="sectionList"> 
+            <table class="table table-borderless">
+                <thead style="border-bottom: 2px solid #45558A;">
+                    <tr style="vertical-align: middle; color: #45558A;">
+                    <th class="d-none d-md-table-cell">#</th>
+                    <th>Désignation</th>
+                    <th>Address</th>
+                    <th>Préfixe</th>
+                    <th style="width: 6vh;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for site in page %}
+                    <tr style="color: #0C2858;">
+                        <td class="d-none d-md-table-cell">{{ site.id }}</td>
+                        <td>{{ site.designation }}</td>
+                        <td>{{ site.address }}</td>
+                        <td>{{ site.prefix_site }}</td>
+                        <td style="vertical-align: middle;">
+                            <button type="button" onclick="window.location='{% url 'edit_site' site.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% endif %}'" class="btn" style="padding: 2px;"><i class="fas fa-edit" style="color: #45558A;"></i></button>
+                            <button type="button" disabled onclick="confirmSiteDel('{{site.id|escapejs}}', '{{site|escapejs}}')" class="btn" style="color: #45558A; padding: 2px;"><i class="far fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if page.has_other_pages %}
+                {% include 'pagination.html' %}
+            {% endif %}    
+        </section>
+    {% else %}
+        {% include 'empty_list.html' %}
+    {% endif %}
+</div>
+<script>
+    const confirmSiteDel = (siteId, siteDes) => {
+        swal({ 
+        title: `Confirmation de la suppression.`,   
+        text: `Etes-vous sûr que vous voulez supprimer le site ${siteDes}?`,   
+        type: "warning",
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "Oui",   
+        cancelButtonText: "Non",   
+        closeOnConfirm: true,   
+        closeOnCancel: true }, 
+        function(isConfirm){   
+            if (isConfirm){
+              window.location.href = "{% url 'delete_site' 123456789 %}".replace(/123456789/, siteId);
+            }});
+    }
+</script>
+{% endblock %}

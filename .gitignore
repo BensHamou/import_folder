@@ -1,0 +1,9 @@
+account/__pycache__/
+importfolderV
+report/__pycache__/
+importfolderV/__pycache__/
+
+account/migrations/*
+!account/migrations/__init__.py
+report/migrations/*
+!report/migrations/__init__.py
