@@ -1,7 +1,8 @@
-account/__pycache__/
-importfolderV
-report/__pycache__/
-importfolderV/__pycache__/
+importfolderV/
+*.pyc
+__pycache__/
+
+*.env
 
 account/migrations/*
 !account/migrations/__init__.py
