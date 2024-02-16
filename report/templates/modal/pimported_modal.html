@@ -1,0 +1,251 @@
+<div class="modal" id="pimportedsModal" tabindex="-1" aria-labelledby="pimportedsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content contentStyle">
+            <div class="modal-header text-white" style="border-color: rgba(171, 175, 181, 0.4);">
+                <h4 class="headerStyle mb-0">Produits Importés - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/{{ report.date_in_stock|date:"y" }}</h4>
+                <p class="lead mb-0 dateStyle">{{ report.date_dep|date:"d/m/Y"}}</p>
+                <button type="button" class="btn-close" style="margin-left: 10px;" data-dismiss="modal" id="buttonPIX" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table card-header text-white" style="background: rgba(0, 0, 0, 0);">
+                    <thead style="border-color: white;">
+                        <th class="d-none d-md-table-cell">Produit</th>
+                        <th class="d-none d-md-table-cell">Qte</th>
+                        <th class="d-none d-md-table-cell">Prix EXW</th>
+                        <th class="d-none d-md-table-cell">Frais</th>
+                        <th class="d-none d-md-table-cell">DZD</th>
+                        <th class="d-none d-md-table-cell">TCS</th>
+                        <th class="d-none d-md-table-cell">Montant TCS</th>
+                        <th class="d-none d-md-table-cell">DD</th>
+                        <th class="d-none d-md-table-cell">Montant DD</th>
+                        <th class="d-none d-md-table-cell">DAPS</th>
+                        <th class="d-none d-md-table-cell">Montant DAPS</th>
+                        <th class="d-none d-md-table-cell">Montant Divers</th>
+                        <th class="d-none d-md-table-cell">Total</th>
+                        <th class="d-none d-md-table-cell">Cout / U</th>
+                        <th class="d-none d-md-table-cell">Nombre Palletes</th>
+                        <th class="d-none d-md-table-cell">Répartition</th>
+                    </thead>
+                    <tbody id="item-pimporteds">
+                        {% for pimported in report.pimporteds.all %}
+                            <tr class="trS">
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Produit</p>
+                                        <p class="valueLead mb-0">{{ pimported.article_code }} {{ pimported.article_designation }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Quantité</p>
+                                        <p class="valueLead mb-0">{{ pimported.qte }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Prix EXW</p>
+                                        <p class="valueLead mb-0">{{ pimported.prix_exw }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Frais</p>
+                                        <p class="valueLead mb-0">{{ pimported.fret }} {{ pimported.foreign_currency }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">DZD</p>
+                                        <p class="valueLead mb-0">{{ pimported.dzd }} {{ pimported.local_currency }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">TCS</p>
+                                        <p class="valueLead mb-0">{{ pimported.tcs }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Montant TCS</p>
+                                        <p class="valueLead mb-0">{{ pimported.mnt_tcs }} {{ pimported.local_currency }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">DD</p>
+                                        <p class="valueLead mb-0">{{ pimported.dd }} {{ pimported.local_currency }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Montant DD</p>
+                                        <p class="valueLead mb-0">{{ pimported.mnt_dd }} {{ pimported.local_currency }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">DAPS</p>
+                                        <p class="valueLead mb-0">{{ pimported.daps }} {{ pimported.local_currency }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Montant DAPS</p>
+                                        <p class="valueLead mb-0">{{ pimported.mnt_daps }} {{ pimported.local_currency }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Montant Divers</p>
+                                        <p class="valueLead mb-0">{{ pimported.mnt_diver }} {{ pimported.local_currency }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Total</p>
+                                        <p class="valueLead mb-0">{{ pimported.total }} {{ pimported.local_currency }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Cout / U</p>
+                                        <p class="valueLead mb-0">{{ pimported.cost_u }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="tdLabel">Nombre Palletes</p>
+                                        <p class="valueLead mb-0">{{ pimported.nbr_blt }}</p>
+                                    </div>
+                                </td>
+                                <td class="tdLast">
+                                    <div>
+                                        <p class="tdLabel">Répartition</p>
+                                        <p class="valueLead mb-0">{{ pimported.repartition }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="trS">
+                                <td></td>
+                                <td>{{pimported.report.total_products_qte}}</td>
+                                <td></td>
+                                <td>{{pimported.report.total_products_fret}} {{pimported.foreign_currency}}</td>
+                                <td>{{pimported.report.total_products_dzd}} {{pimported.local_currency}}</td>
+                                <td></td>
+                                <td>{{pimported.report.total_products_mnt_tcs}} {{pimported.local_currency}}</td>
+                                <td></td>
+                                <td>{{pimported.report.total_products_mnt_dd}} {{pimported.local_currency}}</td>
+                                <td></td>
+                                <td>{{pimported.report.total_products_mnt_daps}} {{pimported.local_currency}}</td>
+                                <td>{{pimported.report.total_products_mnt_diver}} {{pimported.local_currency}}</td>
+                                <td>{{pimported.report.total_products_total}} {{pimported.local_currency}}</td>
+                                <td></td>
+                                <td>{{pimported.report.total_products_nbr_plt}}</td>
+                                <td>{{pimported.report.total_products_repartition}}</td>
+                            </tr>
+                        {% empty %}
+                            <tr class="trS">
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                                <td>Pas d'enregistrements.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer" style="border-color: transparent;">
+                <button type="button" class="btn" style="background-color: #23305d; color: white;" id="buttonPIClose" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#pimporteds-card').click(function () {
+            $("#pimportedsModal").prependTo("body");
+            $('#pimportedsModal').modal('show');
+
+        });
+        $('#buttonPIX').click(function () {
+            $('#pimportedsModal').modal('hide')
+
+        });
+        $('#buttonPIClose').click(function () {
+            $('#pimportedsModal').modal('hide')
+        });
+    });
+</script>
+
+<style>
+    .contentStyle {
+        background: rgba(107, 122, 147, 0.75); 
+        border-radius: 16px; 
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
+        backdrop-filter: blur(2px);
+    }
+    .tdLabel{
+        display: none;
+    }
+    .trS {
+        border-color: transparent; 
+        color: #d9dce1;
+    }
+    .dateStyle{
+        margin-left: auto; 
+    }
+    @media only screen and (max-width: 767px) {
+        .contentStyle {
+            background: rgba(236, 239, 242, 0.95);
+            border-radius: 16px; 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
+            backdrop-filter: blur(2px);
+        }
+        .dateStyle{
+            color: #747474;
+        }
+        .headerStyle{
+            color: #0c2858;
+            font-weight: bold;
+        }
+        td {
+            display: block;
+            width: 100%;
+            text-align: left;
+            box-sizing: border-box;
+            margin: 0 0 2px 10px;
+        }
+        .trS {
+            border-left: 4px solid #8b99b0;
+            border-radius: 5px;
+            color: #5b5b5b;
+            border-top: 10px solid transparent;
+        }
+        .tdLast{
+            border-bottom: 2px solid white;
+        }
+        .valueLead{
+            font-size: 16px;
+        }
+        .tdLabel{
+            display: block;
+            color: #929292; 
+            font-size: 16px; 
+            margin-bottom: 5px;
+        }
+    }
+</style>

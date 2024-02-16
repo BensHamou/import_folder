@@ -1,0 +1,173 @@
+{% extends "main.html" %}
+{% load widget_tweaks %}
+
+{% block title %}
+Liste des rapports
+{% endblock %}
+{% load static %} 
+{% block activeListReport %}{% include 'active_bar.html' %}{% endblock %}
+{% block content %}
+
+<div class="row mb-3">
+    {% if page %}
+        <form method="GET" style="{% if page %}margin: 20px 0px 0px 0px;{% else %}margin-top: 13%;{% endif %}">
+            {% csrf_token %}
+            <div class="row height d-flex justify-content-center align-items-center">
+                <div class="col-lg-4 col-md-3 col-sm-6 mb-2">
+                    <div class="form" style="position: relative;">
+                        <i class="fa fa-search" style="position: absolute; top:12px; left: 17px; color: #133356;"></i>{{ filter.form.search }}
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-6 mb-2">
+                    {{ filter.form.start_date }}
+                </div>
+                <div class="col-md-2 col-sm-6 mb-2">
+                    {{ filter.form.end_date }}
+                </div>
+                <div class="col-md-2 col-sm-6 mb-2">
+                    {{ filter.form.site }}
+                </div>
+                <div class="col-md-1 col-sm-6 mb-2">
+                    <input type="number" class="form-control" value="{% if request.GET.page_size %}{{ request.GET.page_size }}{% else %}12{% endif %}" style="background-color: #ebecee; 
+                    border-color: transparent; color: #133356; height: 40px;" name="page_size">
+                </div>
+                <div class="col-md-1 col-sm-6 mb-2">
+                    <button type="submit" class="btn btn-secondary btn-block customSaveButton" style="height: 40px;">Appliquer</button>
+                </div>
+            </div>
+            <div class="row height d-flex justify-content-center align-items-center">
+                <div class="col-md-4 col-sm-6 mb-2">
+                    {{ filter.form.state }}
+                </div>
+            </div>
+        </form>
+        <section class="sectionList"> 
+            <div class="tableStyle">
+                <table class="table table-borderless">
+                    <thead style="border-bottom: 2px solid #45558A;">
+                        <tr style="vertical-align: middle; color: #45558A;">
+                            <th>N° Rapport</th>
+                            <th>Créateur</th>
+                            <th class="d-none d-lg-table-cell" style="width: 10vw;">Date de création</th>
+                            <th>Fournisseur</th>
+                            <th>N° Facture</th>
+                            <th>Lieu Déchargement</th>
+                            <th>Transitaire</th>
+                            <th>Camion</th>
+                            <th>Date Entré au Stock</th>
+                            <th>Date Calcule de Cout</th>
+                            <th>Total Dossiers</th>
+                            <th>État</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in page %}
+                        <tr style="color: #0C2858;">
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/{{ report.date_in_stock|date:"y" }}</td>
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.creator }}</td>
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.date_created|date:"d/m/Y H:i" }}</td>
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.fournisseur }}</td>
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.n_facture }}</td>
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.lieu_decharge.designation }}</td>
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.transitor }}</td>
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.camion }}</td>
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.date_in_stock|date:"d/m/Y" }}</td>
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.date_calc_cost|date:"d/m/Y" }}</td>
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.total }}</td>
+                            <td onclick="window.location='{% url 'view_report' report.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}'"  style="cursor: pointer;">{{ report.state }}</td>
+                            <td style="vertical-align: middle; padding: 8px 0px; text-align: center;">            
+                                <button type="button" onclick="window.location='{% url 'edit_report' report.id %}'"  style="padding: 2px;"
+                                class="btn" {% if report.state != 'Brouillon' or report.creator != user %} disabled {% endif %}><i class="fas fa-edit" style="color: #45558A;"></i></button>
+                                <button type="button" {% if report.state != 'Brouillon' or report.creator != user %} disabled {% endif %} style="padding: 2px;" onclick="confirmReportDel('{{report.id|escapejs}}', '{{report.n_report|escapejs}}')" class="btn">
+                                    <i class="far fa-trash-alt" style="color: #45558A;"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if page.has_other_pages %}
+                {% include 'pagination.html' %}
+            {% endif %}    
+        </section>
+        </div>
+    {% else %}
+        {% include 'empty_list.html' %}
+    {% endif %}
+</div>
+<style>
+    select option {
+        background: rgba(235, 236, 238, 0.9);
+        color: #1b497c;
+    }
+    .sectionList{
+        margin-top: 35px;
+        background: rgba(147, 164, 186, 0.2);
+        border-radius: 5px; 
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    @media only screen and (max-width: 1370px) {
+            .tableStyle{
+                overflow-x: auto; 
+                width:  85vw;
+            }
+    }
+    @media only screen and (max-width: 1100px) {
+            .tableStyle{
+                overflow-x: auto; 
+                width:  85vw;
+            }
+    }
+    @media only screen and (max-width: 950px) {
+            .tableStyle{
+                overflow-x: auto; 
+                width:  83vw;
+            }
+    }
+    @media only screen and (max-width: 860px) {
+            .tableStyle{
+                overflow-x: auto; 
+                width:  83vw;
+            }
+    }
+    @media only screen and (max-width: 780px) {
+            table td, table th {
+                white-space: nowrap;
+            }
+            .tableStyle{
+                overflow-x: auto; 
+                width:  80vw;
+            }
+    }
+    @media only screen and (max-width: 700px) {
+            table td, table th {
+                white-space: nowrap;
+            }
+            .tableStyle{
+                overflow-x: auto; 
+                width:  75vw;
+            }
+    }
+</style>
+
+<script>
+    const confirmReportDel = (reportID, reportN) => {
+        swal({ 
+        title: `Confirmation de la suppression.`,   
+        text: `Etes-vous sûr que vous voulez supprimer le rapport N° ${reportN}?`,   
+        type: "warning",
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "Oui",   
+        cancelButtonText: "Non",   
+        closeOnConfirm: true,   
+        closeOnCancel: true },
+        function(isConfirm){   
+            if (isConfirm){
+              window.location.href = "{% url 'delete_report' 123456789 %}".replace(/123456789/, reportID);
+            }});
+    };
+</script>
+{% endblock %}

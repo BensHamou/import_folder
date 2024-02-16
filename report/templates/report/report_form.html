@@ -1,0 +1,666 @@
+{% extends "main.html" %}
+
+{% block title %}
+Rapport
+{% endblock %}
+{% load static %} 
+{% load widget_tweaks %}
+{% block activeCreateReport %} {% include 'active_bar.html' %} {% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-left mb-3">
+<a href="{% url 'reports' %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}" class="text-decoration-none text-white d-flex align-items-center" style="color: #133356; letter-spacing: 1.2px;">
+    <i class="fas fa-caret-left me-2" style="color: #133356;"></i>
+    <p class="lead m-0 p-0" style="color: #133356;">retour</p>
+</a>
+</div>
+<h4 class="mb-4" style="color: #133356;">{% if report %}Modification du rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/{{ report.date_in_stock|date:"y" }}{% else %}Création d'un rapport{% endif %}</h4>
+
+<form class="container" method="POST" id="report_form">
+    {% csrf_token %}
+    {% if form.instance.pk %}
+        <input type="hidden" value="1" id="isUpdating"/> 
+    {% endif %}
+    <div class="card card-body mb-5 custom-card">
+        <!-- SITE - N RAPPORT - N Facture - N Facture 2 -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="site">Site</label>
+                    {{ form.site }}
+                    {% if form.site.errors %}
+                        <div style="color: red;">
+                        {% for error in form.site.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="n_report">N° Rapport</label>
+                    {{ form.n_report }}
+                    {% if form.n_report.errors %}
+                        <div style="color: red;">
+                        {% for error in form.n_report.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="n_facture">N° Facture</label>
+                    {{ form.n_facture }}
+                    {% if form.n_facture.errors %}
+                        <div style="color: red;">
+                        {% for error in form.n_facture.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="n_facture2">N° Facture 2</label>
+                    {{ form.n_facture2 }}
+                    {% if form.n_facture2.errors %}
+                        <div style="color: red;">
+                        {% for error in form.n_facture2.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- FOURNISSEUR - LIEU DECHARGEMENT - TRANSITAIRE - CAMION -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="fournisseur">Fournisseur</label>
+                    {{ form.fournisseur }}
+                    {{ form.fournisseur_id }}
+                    <div id="suggestions" class="sugdiv"></div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="lieu_decharge">Lieu Déchargement</label>
+                    {{ form.lieu_decharge }}
+                    {% if form.lieu_decharge.errors %}
+                        <div style="color: red;">
+                        {% for error in form.lieu_decharge.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="transitor">Transitaire</label>
+                    {{ form.transitor }}
+                    {% if form.transitor.errors %}
+                        <div style="color: red;">
+                        {% for error in form.transitor.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="camion">Camion</label>
+                    {{ form.camion }}
+                    {% if form.camion.errors %}
+                        <div style="color: red;">
+                        {% for error in form.camion.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- DATE ENTRE AU STOCK - DATE CALCUL DE COUT  -->
+        <div class="row mb-4">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="date_in_stock">Date Entré au Stock</label>
+                    {{ form.date_in_stock }}
+                    {% if form.date_in_stock.errors %}
+                        <div style="color: red;">
+                        {% for error in form.date_in_stock.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="date_calc_cost">Date Calcul de Cout</label>
+                    {{ form.date_calc_cost }}
+                    {% if form.date_calc_cost.errors %}
+                        <div style="color: red;">
+                        {% for error in form.date_calc_cost.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-body mb-5 custom-card">
+        <!-- TAUX DE CHANGE - MONTANT FACTURE - MONTANT FRET - CURRENCY FOREIGN -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="exchange_rate">Taux de Change</label>
+                    {{ form.exchange_rate }}
+                    {% if form.exchange_rate.errors %}
+                        <div style="color: red;">
+                        {% for error in form.exchange_rate.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="facture_amount">Montant Facture</label>
+                    {{ form.facture_amount }}
+                    {% if form.facture_amount.errors %}
+                        <div style="color: red;">
+                        {% for error in form.facture_amount.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="facture_fees">Montant Frais</label>
+                    {{ form.facture_fees }}
+                    {% if form.facture_fees.errors %}
+                        <div style="color: red;">
+                        {% for error in form.facture_fees.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="facture_currency">Devise</label>
+                    {{ form.facture_currency }}
+                    {% if form.facture_currency.errors %}
+                        <div style="color: red;">
+                        {% for error in form.facture_currency.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- CONNAISSEMENT - MAGASINAGE - DOUANES ALGERIENNE - CURRENCY LOCAL -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="exchange_rate">Connaissement</label>
+                    {{ form.ladding_bill }}
+                    {% if form.ladding_bill.errors %}
+                        <div style="color: red;">
+                        {% for error in form.ladding_bill.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="facture_amount">Magasinage</label>
+                    {{ form.shopping }}
+                    {% if form.shopping.errors %}
+                        <div style="color: red;">
+                        {% for error in form.shopping.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="facture_fees">Douanes Algérienne</label>
+                    {{ form.customs }}
+                    {% if form.customs.errors %}
+                        <div style="color: red;">
+                        {% for error in form.customs.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="facture_currency">Devise</label>
+                    {{ form.local_currency }}
+                    {% if form.local_currency.errors %}
+                        <div style="color: red;">
+                        {% for error in form.local_currency.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- TCS - DAPS - DD  -->
+        <div class="row mb-4">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="tcs">TCS</label>
+                    {{ form.tcs }}
+                    {% if form.tcs.errors %}
+                        <div style="color: red;">
+                        {% for error in form.tcs.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="daps">DAPS</label>
+                    {{ form.daps }}
+                    {% if form.daps.errors %}
+                        <div style="color: red;">
+                        {% for error in form.daps.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="dd">DD</label>
+                    {{ form.dd }}
+                    {% if form.dd.errors %}
+                        <div style="color: red;">
+                        {% for error in form.dd.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- HONORRAIRE DOUANES - TRANSPORT LOCAL - AUTRES FRAIS - SERUSTARIES -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="customs_honorary">Honorraire Douanes</label>
+                    {{ form.customs_honorary }}
+                    {% if form.customs_honorary.errors %}
+                        <div style="color: red;">
+                        {% for error in form.customs_honorary.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="local_transport">Transport Local</label>
+                    {{ form.local_transport }}
+                    {% if form.local_transport.errors %}
+                        <div style="color: red;">
+                        {% for error in form.local_transport.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="other_fees">Autres Frais</label>
+                    {{ form.other_fees }}
+                    {% if form.other_fees.errors %}
+                        <div style="color: red;">
+                        {% for error in form.other_fees.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="surestaries">Serustaries</label>
+                    {{ form.surestaries }}
+                    {% if form.surestaries.errors %}
+                        <div style="color: red;">
+                        {% for error in form.surestaries.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+  {% with named_formsets.ptransporteds as formset %}
+      {{ formset.management_form }}
+      <script type="text/html" id="ptransporteds-template">
+          <tr id="ptransporteds-__prefix__" class= hide_all>
+                {% for fields in formset.empty_form.hidden_fields %}
+                    {{ fields }}
+                {% endfor %}
+                <td></td>
+                {% for field in formset.empty_form.visible_fields %}
+                <td>
+                    {% if field.label == 'Supprimer' %}
+                        <div class="d-flex justify-content-center">
+                            <button type="button" onclick="deleteRow(this.parentNode.parentNode.parentNode)" class="btn" style="color: white;">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    {% else %}
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <span style="color: red">*{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </td>
+              {% endfor %}
+          </tr>
+      </script>
+      <div class="table-responsive card mt-4" style="background: rgba(19, 51, 86, 0.85); border-radius: 3px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+          <div class="card-header card-header-secondary">
+              <p class="card-title lead" style="font-size: 26px; color: rgb(237, 243, 253)">Produits</p>
+          </div>
+          <table class="table card-header">
+              <tbody id="item-ptransporteds">
+                  {% for error in formset.non_form_errors %}
+                      <span style="color: red">*{{ error }}</span>
+                  {% endfor %}
+                  {% for formss in formset %}
+                      {{ formss.management_form }}
+                      <tr id="ptransporteds-{{ forloop.counter0 }}" class= hide_all>
+                          {{ formss.id }}
+                          <td></td>
+                          {% for field in formss.visible_fields %}
+                              {% if not field.label == 'Supprimer' %}
+                                  <td>
+                                      {{ field }}
+                                      {% for error in field.errors %}
+                                          <span style="color: red">*{{ error }}</span>
+                                      {% endfor %}
+                                  </td>
+                              {% endif %}
+                          {% endfor %}
+                          {% if formss.instance.pk %}
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                <button type="button" onclick="confirmPTransportedDel('{{formss.instance.pk|escapejs}}')" class="btn" style="color: white;">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            </td>    
+                          {% else %}
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <button type="button" onclick="deleteRow(this.parentNode.parentNode)" class="btn" style="color: white;">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>    
+                          {% endif %}
+                      </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+          <div class="d-flex justify-content-end align-items-center m-2">
+                <a href="#" id="add-ptransporteds-button" class="btn btn-secondary add-ptransporteds" style="background-color: #979ba3; border-color: #979ba3;" role="button"><i class="fas fa-plus"></i></a>
+          </div>
+      </div>    
+  {% endwith %}
+
+    <div class="d-flex justify-content-center align-items-center form-group m-4">
+        <button type="submit" class="btn btn-secondary btn-block customSaveButton">
+            {% if form.instance.pk %}Sauvegarder les modifications{% else %}Créer{% endif %}
+        </button>
+    </div>
+</form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    #suggestions {
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      max-height: 200px;
+      overflow-y: scroll;
+      display: none;
+      border-radius: 0 0 10px 10px;
+    }
+    
+    .suggestion {
+      padding: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    
+    .suggestion:hover {
+      background-color: #eee;
+    }
+    
+    #suggestions.loading {
+      background-color: #f2f2f2;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    #suggestions.loading .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-top: 2px solid #333;
+      border-radius: 50%;
+      animation: spin 2s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    .highlight {
+        border: 2px solid green;
+        animation: highlightAnimation 1s ease-in-out;
+    }
+    .select2-search {
+        background-color: #ebecee !important;
+    }
+    .select2-search input {
+        background-color: #ebecee !important;
+    }
+    
+    .select2-results {
+        background-color: #ebecee !important;
+    }
+    
+    .select2-container--bootstrap-5 .select2-selection {
+        border-color: #ebecee !important;
+        background-color: #ebecee !important;
+    }
+    @media only screen and (max-width: 767px) {
+        td {
+            display: block;
+            width: 100%;
+            text-align: left;
+            box-sizing: border-box;
+            margin-bottom: 5px;
+        }
+    }
+    
+    @keyframes highlightAnimation {
+        0% {
+            border: 2px solid green;
+        }
+        100% {
+            border: 1px solid rgba(118, 118, 118, 0.3);
+        }
+    }
+</style>
+
+<script>
+    const setValue = (e, selectedId) => {
+        var suggestions = e.parentNode;
+        var fieldIdInput = suggestions.previousElementSibling;
+        var fieldInput = fieldIdInput.previousElementSibling;
+  
+        if (fieldIdInput && fieldInput && suggestions) {
+          fieldIdInput.value = selectedId;
+          fieldInput.value = e.innerHTML;
+          // if(localite_code != '/'){
+          //   $('#id_address_zip').val(localite_code);
+          // }
+          suggestions.innerHTML = '';
+          suggestions.style.display = 'none';
+        }
+    };
+    const deleteRow = (row) => {
+        row.remove();
+        $('#id_ptransporteds-TOTAL_FORMS').val($('#id_ptransporteds-TOTAL_FORMS').val() - 1);
+    }
+    const confirmPTransportedDel = (produitId) => {
+        swal({ 
+        title: `Confirmation de la suppression.`,   
+        text: `Etes-vous sûr que vous voulez supprimer ce produit de cette liste?`,   
+        type: "warning",
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "Oui",   
+        cancelButtonText: "Non",   
+        closeOnConfirm: true,   
+        closeOnCancel: true }, 
+        function(isConfirm){   
+            if (isConfirm){
+              window.location.href = "{% url 'report_delete_product' 123456789 %}".replace(/123456789/, produitId);
+            }});
+    }
+    const hasDuplicates = (a) => {
+        const noDups = new Set(a);
+        return a.length !== noDups.size;
+    }
+    
+    $(document).ready(function() {
+        $('.form-select').select2({
+            theme: 'bootstrap-5', 
+            allowClear: true, 
+        });
+        $('.add-ptransporteds').click(function(ev) {
+            ev.preventDefault();
+            var count = $('#item-ptransporteds').children().length;
+            var tmplMarkup = $('#ptransporteds-template').html();
+            var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+            $('#item-ptransporteds').append(compiledTmpl);
+            
+            $('#id_ptransporteds-TOTAL_FORMS').attr('value', count+1);
+            $('.form-select').select2({theme: 'bootstrap-5', allowClear: true,});
+            var newElement = $('#item-ptransporteds').children().last()[0];
+            newElement.scrollIntoView({ behavior: 'smooth' });
+        });
+        $('form').submit(function (event) {
+            event.preventDefault();
+            var selectedProducts = [];
+            $("[id^='id_ptransporteds-'][id$='-product']").each(function() {
+                selectedProducts.push(this.value);
+            });
+            if(selectedProducts.length == 0){
+                swal({title: `Oops, Ce rapport ne contient aucun produit transporté.!`,   
+                    text: `Veuillez insérer au moins un produit.`, confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "Ok", type: "warning", closeOnCancel: true });
+            }
+            else if(hasDuplicates(selectedProducts)){
+                swal({title: `Oops, Il y a des produits en double!`,   
+                    text: `Veuillez modifier votre saisie.`, confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "Ok", type: "warning", closeOnCancel: true });
+            }
+            else{
+                $('[disabled]').removeAttr('disabled');
+                this.submit(); 
+            }
+        });
+        const checkFields = () => {
+            if($('#id_destination').val() &&  $('#id_site').val() &&  $('#id_tonnage').val() &&  $('#id_fournisseur').val()){
+                getPrice($('#id_destination').val(), $('#id_site').val(), $('#id_tonnage').val(), $('#id_fournisseur').val());
+            }
+        }
+        const getPrice = (dest, site, ton, four) => {
+            var csrf = $('input[name=csrfmiddlewaretoken]').val();
+            $.ajax({ url: '{% url 'get_price' %}', type: 'GET',
+                data: {'destination': dest, 'site': site, 'tonnage': ton, 'fournisseur': four, 'csrfmiddlewaretoken': csrf},
+                    success: function(response) {
+                        if(response.exist){
+                            $('#id_prix').val(response.price_id);
+                            $('#id_price').val(response.price_prix);
+                            $('#id_price').addClass("highlight");
+                            setTimeout(function() {
+                                $('#id_price').removeClass("highlight");
+                            }, 1000);
+                        }else{
+                            $('#id_prix').val('');
+                            $('#id_price').val('');
+                            swal({title: `Oops, Il n'y a pas de prix avec les paramètres donnés!`,   
+                                text: `Veuillez modifier votre saisie.`, confirmButtonColor: "#DD6B55",   
+                                confirmButtonText: "Ok", type: "warning", closeOnCancel: true });
+                        }
+                    },
+                    error: function(xhr, errmsg, err) {
+                    console.log(errmsg);
+                    }
+                });
+        }
+        $('#id_site').on('change', function() {
+            checkFields();
+        });
+        $('#id_destination').on('change', function() {
+            checkFields()
+        });
+        $('#id_tonnage').on('change', function() {
+            checkFields()
+        });
+        $('#id_fournisseur').on('change', function() {
+            checkFields()
+        });
+    });
+</script>
+
+{% endblock %}
