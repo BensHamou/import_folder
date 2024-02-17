@@ -20,7 +20,7 @@ def login_success(request):
     user = request.user
     if user.is_authenticated:
         if not user.is_admin:
-            return redirect("reports")
+            return redirect("list_report")
     return redirect("home")
 
 def admin_required(view_func):

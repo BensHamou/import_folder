@@ -13,7 +13,7 @@ Transitaire
     <p class="lead m-0 p-0 retourC">retour</p>
 </a>
 </div>
-<h4 class="mb-4 retourC">{% if currency %}Modification du {{ currency.designation }}{% else %}Création d'un transitaire{% endif %}</h4>
+<h4 class="mb-4 retourC">{% if transitor %}Modification du {{ transitor.designation }}{% else %}Création d'un transitaire{% endif %}</h4>
 
 <form method="POST">
   {% csrf_token %}

@@ -9,7 +9,7 @@ Rapport
 {% block content %}
 
 <div class="d-flex justify-content-left mb-3">
-<a href="{% url 'reports' %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}" class="text-decoration-none text-white d-flex align-items-center" style="color: #133356; letter-spacing: 1.2px;">
+<a href="{% url 'list_report' %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}" class="text-decoration-none text-white d-flex align-items-center" style="color: #133356; letter-spacing: 1.2px;">
     <i class="fas fa-caret-left me-2" style="color: #133356;"></i>
     <p class="lead m-0 p-0" style="color: #133356;">retour</p>
 </a>
@@ -365,24 +365,49 @@ Rapport
                 </div>
             </div>
         </div>
+        <!-- OBSERVATION -->
+        <div class="row mb-4">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="form-outline">
+                    <label class="form-label mt-2 labelCustom" for="observation">Observation</label>
+                    {{ form.observation }}
+                    {% if form.observation.errors %}
+                        <div style="color: red;">
+                        {% for error in form.observation.errors %}
+                            *{{ error }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 
-  {% with named_formsets.ptransporteds as formset %}
+  {% with named_formsets.pimporteds as formset %}
       {{ formset.management_form }}
-      <script type="text/html" id="ptransporteds-template">
-          <tr id="ptransporteds-__prefix__" class= hide_all>
+      <script type="text/html" id="pimporteds-template">
+          <tr id="pimporteds-__prefix__" class= hide_all>
+            
                 {% for fields in formset.empty_form.hidden_fields %}
                     {{ fields }}
                 {% endfor %}
                 <td></td>
                 {% for field in formset.empty_form.visible_fields %}
+                
                 <td>
                     {% if field.label == 'Supprimer' %}
                         <div class="d-flex justify-content-center">
-                            <button type="button" onclick="deleteRow(this.parentNode.parentNode.parentNode)" class="btn" style="color: white;">
+                            <button type="button" onclick="deleteRow(this.parentNode.parentNode.parentNode)" class="btn" style="color: #133356;">
                                 <i class="far fa-trash-alt"></i>
                             </button>
                         </div>
+                    {% elif field.label == 'Article code' %}
+                        {{ field }}
+                        {{ formset.empty_form.article_id }}
+                        <div id="suggestions" class="sugdiv"></div>
+                        {% for error in field.errors %}
+                            <span style="color: red">*{{ error }}</span>
+                        {% endfor %}
                     {% else %}
                         {{ field }}
                         {% for error in field.errors %}
@@ -393,34 +418,46 @@ Rapport
               {% endfor %}
           </tr>
       </script>
-      <div class="table-responsive card mt-4" style="background: rgba(19, 51, 86, 0.85); border-radius: 3px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">
+      <div class="table-responsive card mt-4 custom-card">
           <div class="card-header card-header-secondary">
-              <p class="card-title lead" style="font-size: 26px; color: rgb(237, 243, 253)">Produits</p>
+              <p class="card-title lead" style="font-size: 26px; color: #133356;">Produits</p>
           </div>
           <table class="table card-header">
-              <tbody id="item-ptransporteds">
+              <tbody id="item-pimporteds">
                   {% for error in formset.non_form_errors %}
                       <span style="color: red">*{{ error }}</span>
                   {% endfor %}
                   {% for formss in formset %}
                       {{ formss.management_form }}
-                      <tr id="ptransporteds-{{ forloop.counter0 }}" class= hide_all>
+                      <tr id="pimporteds-{{ forloop.counter0 }}" class= hide_all>
                           {{ formss.id }}
                           <td></td>
                           {% for field in formss.visible_fields %}
-                              {% if not field.label == 'Supprimer' %}
-                                  <td>
-                                      {{ field }}
-                                      {% for error in field.errors %}
-                                          <span style="color: red">*{{ error }}</span>
-                                      {% endfor %}
-                                  </td>
-                              {% endif %}
+                          
+                            {% if field.label == 'Article code' %}
+                            <td>
+                                {{ field.label}}
+                                {{ field }}
+                                {{ formss.article_id }}
+                                <div id="suggestions" class="sugdiv"></div>
+                                {% for error in field.errors %}
+                                    <span style="color: red">*{{ error }}</span>
+                                {% endfor %}
+                            </td>
+                            {% elif not field.label == 'Supprimer' %}
+                                <td>
+                                  {{ field.label}}
+                                    {{ field }}
+                                    {% for error in field.errors %}
+                                        <span style="color: red">*{{ error }}</span>
+                                    {% endfor %}
+                                </td>
+                            {% endif %}
                           {% endfor %}
                           {% if formss.instance.pk %}
                             <td>
                                 <div class="d-flex justify-content-center">
-                                <button type="button" onclick="confirmPTransportedDel('{{formss.instance.pk|escapejs}}')" class="btn" style="color: white;">
+                                <button type="button" onclick="confirmPImportedDel('{{formss.instance.pk|escapejs}}')" class="btn" style="color: #133356;">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -428,7 +465,7 @@ Rapport
                           {% else %}
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <button type="button" onclick="deleteRow(this.parentNode.parentNode)" class="btn" style="color: white;">
+                                    <button type="button" onclick="deleteRow(this.parentNode.parentNode)" class="btn" style="color: #133356;">
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </div>
@@ -439,7 +476,7 @@ Rapport
               </tbody>
           </table>
           <div class="d-flex justify-content-end align-items-center m-2">
-                <a href="#" id="add-ptransporteds-button" class="btn btn-secondary add-ptransporteds" style="background-color: #979ba3; border-color: #979ba3;" role="button"><i class="fas fa-plus"></i></a>
+                <a href="#" id="add-pimporteds-button" class="btn btn-secondary add-pimporteds" style="background-color: #979ba3; border-color: #979ba3;" role="button"><i class="fas fa-plus"></i></a>
           </div>
       </div>    
   {% endwith %}
@@ -505,19 +542,19 @@ Rapport
         animation: highlightAnimation 1s ease-in-out;
     }
     .select2-search {
-        background-color: #ebecee !important;
+        background-color: #dad2ff !important;
     }
     .select2-search input {
-        background-color: #ebecee !important;
+        background-color: #dad2ff !important;
     }
     
     .select2-results {
-        background-color: #ebecee !important;
+        background-color: #dad2ff !important;
     }
     
     .select2-container--bootstrap-5 .select2-selection {
-        border-color: #ebecee !important;
-        background-color: #ebecee !important;
+        border-color: #dad2ff !important;
+        background-color: #dad2ff !important;
     }
     @media only screen and (max-width: 767px) {
         td {
@@ -544,22 +581,31 @@ Rapport
         var suggestions = e.parentNode;
         var fieldIdInput = suggestions.previousElementSibling;
         var fieldInput = fieldIdInput.previousElementSibling;
-  
         if (fieldIdInput && fieldInput && suggestions) {
           fieldIdInput.value = selectedId;
           fieldInput.value = e.innerHTML;
-          // if(localite_code != '/'){
-          //   $('#id_address_zip').val(localite_code);
-          // }
+          suggestions.innerHTML = '';
+          suggestions.style.display = 'none';
+        }
+    };
+    const setValueTD = (e, selectedId, selectedDes) => {
+        var suggestions = e.parentNode;
+        var fieldIdInput = suggestions.previousElementSibling;
+        var fieldInput = fieldIdInput.previousElementSibling;
+        var nextTextInput = $(e).closest('td').next('td').find('input[type="text"]')[0];
+        if (fieldIdInput && fieldInput && suggestions && nextTextInput) {
+          fieldIdInput.value = selectedId;
+          fieldInput.value = e.innerHTML;
+          nextTextInput.value = selectedDes;
           suggestions.innerHTML = '';
           suggestions.style.display = 'none';
         }
     };
     const deleteRow = (row) => {
         row.remove();
-        $('#id_ptransporteds-TOTAL_FORMS').val($('#id_ptransporteds-TOTAL_FORMS').val() - 1);
+        $('#id_pimporteds-TOTAL_FORMS').val($('#id_pimporteds-TOTAL_FORMS').val() - 1);
     }
-    const confirmPTransportedDel = (produitId) => {
+    const confirmPImportedDel = (produitId) => {
         swal({ 
         title: `Confirmation de la suppression.`,   
         text: `Etes-vous sûr que vous voulez supprimer ce produit de cette liste?`,   
@@ -581,30 +627,124 @@ Rapport
     }
     
     $(document).ready(function() {
-        $('.form-select').select2({
-            theme: 'bootstrap-5', 
-            allowClear: true, 
+        $('.custom-select').select2({theme: 'bootstrap-5', allowClear: true, });
+        
+        $('.search-input').keyup(function() {
+            var suggestions = $(this).siblings('#suggestions');
+            var searchInput = $(this);
+            var searchInputID = $(this).siblings('.search-input-id');
+            searchInputID.val('');
+            if (searchInput.val()) {
+                suggestions.addClass('loading');
+                $.ajax({url: '{% url "live_search" %}', type: 'GET', data: { 'search_term': searchInput.val(), 'search_for': searchInput.attr('name') }, dataType: 'json',
+                    success: function(response) {
+                        var suggestionsHTML = '';
+                        if (response.length > 0) {
+                            for (var i = 0; i < response.length; i++) {
+                                var result = response[i];
+                                suggestionsHTML += `<div class="suggestion" onClick="setValue(this, ${result.id})">${result.name}</div>`;
+                            }
+                            suggestions.html(suggestionsHTML);
+                            suggestions.removeClass('loading');
+                            suggestions.show();
+                        } else {
+                            suggestionsHTML = '<p>Aucune suggestion trouvée</p>';
+                            suggestions.html(suggestionsHTML);
+                            suggestions.removeClass('loading');
+                            suggestions.show();
+                        }
+                    }
+            });
+            } else {
+                suggestions.empty();
+                suggestions.hide();
+            }
         });
-        $('.add-ptransporteds').click(function(ev) {
+        
+        $('.search-input-td').keyup(function() {
+            var suggestions = $(this).siblings('#suggestions');
+            var searchInput = $(this);
+            var searchInputID = $(this).siblings('.search-input-id');
+            searchInputID.val('');
+            if (searchInput.val()) {
+                suggestions.addClass('loading');
+                $.ajax({url: '{% url "live_search" %}', type: 'GET', data: { 'search_term': searchInput.val(), 'search_for': searchInput.attr('name') }, dataType: 'json',
+                    success: function(response) {
+                        var suggestionsHTML = '';
+                        if (response.length > 0) {
+                            for (var i = 0; i < response.length; i++) {
+                                var result = response[i];
+                                suggestionsHTML += `<div class="suggestion" onClick="setValueTD(this, ${result.id}, '${result.name}')">${result.code}</div>`;
+                            }
+                            suggestions.html(suggestionsHTML);
+                            suggestions.removeClass('loading');
+                            suggestions.show();
+                        } else {
+                            suggestionsHTML = '<p>Aucune suggestion trouvée</p>';
+                            suggestions.html(suggestionsHTML);
+                            suggestions.removeClass('loading');
+                            suggestions.show();
+                        }
+                    }
+            });
+            } else {
+                suggestions.empty();
+                suggestions.hide();
+            }
+        });
+
+        $('.add-pimporteds').click(function(ev) {
             ev.preventDefault();
-            var count = $('#item-ptransporteds').children().length;
-            var tmplMarkup = $('#ptransporteds-template').html();
+            var count = $('#item-pimporteds').children().length;
+            var tmplMarkup = $('#pimporteds-template').html();
             var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
-            $('#item-ptransporteds').append(compiledTmpl);
+            $('#item-pimporteds').append(compiledTmpl);
             
-            $('#id_ptransporteds-TOTAL_FORMS').attr('value', count+1);
+            $('#id_pimporteds-TOTAL_FORMS').attr('value', count+1);
             $('.form-select').select2({theme: 'bootstrap-5', allowClear: true,});
-            var newElement = $('#item-ptransporteds').children().last()[0];
+            var newElement = $('#item-pimporteds').children().last()[0];
             newElement.scrollIntoView({ behavior: 'smooth' });
+            $(newElement).find('.search-input-td').keyup(function() {
+                var suggestions = $(this).siblings('#suggestions');
+                var searchInput = $(this);
+                var searchInputID = $(this).siblings('.search-input-id');
+                searchInputID.val('');
+                if (searchInput.val()) {
+                    suggestions.addClass('loading');
+                    $.ajax({url: '{% url "live_search" %}', type: 'GET', data: { 'search_term': searchInput.val(), 'search_for': searchInput.attr('name') }, dataType: 'json',
+                        success: function(response) {
+                            var suggestionsHTML = '';
+                            if (response.length > 0) {
+                                for (var i = 0; i < response.length; i++) {
+                                    var result = response[i];
+                                    suggestionsHTML += `<div class="suggestion" onClick="setValueTD(this, ${result.id}, '${result.name}')">${result.code}</div>`;
+                                }
+                                suggestions.html(suggestionsHTML);
+                                suggestions.removeClass('loading');
+                                suggestions.show();
+                            } else {
+                                suggestionsHTML = '<p>Aucune suggestion trouvée</p>';
+                                suggestions.html(suggestionsHTML);
+                                suggestions.removeClass('loading');
+                                suggestions.show();
+                            }
+                        }
+                });
+                } else {
+                    suggestions.empty();
+                    suggestions.hide();
+                }
+            });
         });
+
         $('form').submit(function (event) {
             event.preventDefault();
             var selectedProducts = [];
-            $("[id^='id_ptransporteds-'][id$='-product']").each(function() {
+            $("[id^='id_pimporteds-'][id$='-article_id']").each(function() {
                 selectedProducts.push(this.value);
             });
             if(selectedProducts.length == 0){
-                swal({title: `Oops, Ce rapport ne contient aucun produit transporté.!`,   
+                swal({title: `Oops, Ce rapport ne contient aucun produit importé.!`,   
                     text: `Veuillez insérer au moins un produit.`, confirmButtonColor: "#DD6B55",   
                     confirmButtonText: "Ok", type: "warning", closeOnCancel: true });
             }
@@ -617,48 +757,6 @@ Rapport
                 $('[disabled]').removeAttr('disabled');
                 this.submit(); 
             }
-        });
-        const checkFields = () => {
-            if($('#id_destination').val() &&  $('#id_site').val() &&  $('#id_tonnage').val() &&  $('#id_fournisseur').val()){
-                getPrice($('#id_destination').val(), $('#id_site').val(), $('#id_tonnage').val(), $('#id_fournisseur').val());
-            }
-        }
-        const getPrice = (dest, site, ton, four) => {
-            var csrf = $('input[name=csrfmiddlewaretoken]').val();
-            $.ajax({ url: '{% url 'get_price' %}', type: 'GET',
-                data: {'destination': dest, 'site': site, 'tonnage': ton, 'fournisseur': four, 'csrfmiddlewaretoken': csrf},
-                    success: function(response) {
-                        if(response.exist){
-                            $('#id_prix').val(response.price_id);
-                            $('#id_price').val(response.price_prix);
-                            $('#id_price').addClass("highlight");
-                            setTimeout(function() {
-                                $('#id_price').removeClass("highlight");
-                            }, 1000);
-                        }else{
-                            $('#id_prix').val('');
-                            $('#id_price').val('');
-                            swal({title: `Oops, Il n'y a pas de prix avec les paramètres donnés!`,   
-                                text: `Veuillez modifier votre saisie.`, confirmButtonColor: "#DD6B55",   
-                                confirmButtonText: "Ok", type: "warning", closeOnCancel: true });
-                        }
-                    },
-                    error: function(xhr, errmsg, err) {
-                    console.log(errmsg);
-                    }
-                });
-        }
-        $('#id_site').on('change', function() {
-            checkFields();
-        });
-        $('#id_destination').on('change', function() {
-            checkFields()
-        });
-        $('#id_tonnage').on('change', function() {
-            checkFields()
-        });
-        $('#id_fournisseur').on('change', function() {
-            checkFields()
         });
     });
 </script>

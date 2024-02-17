@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 
 {% block title %}
-Rapport - {{ report.site.prefix_site }}{{ report.n_bl|stringformat:"05d" }}/{{ report.date_in_stock|date:"y" }}
+Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/{{ report.date_in_stock|date:"y" }}
 {% endblock %}
 {% load static %} 
 {% block activeListReport %} {% include 'active_bar.html' %} {% endblock %}
@@ -11,7 +11,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_bl|stringformat:"05d" }}/{{ r
     <div class="col-md-8">
         <div class="d-flex mb-5">
             <div class="col-lg-2 col-md-3 col-sm-3">
-                <a href="{% url 'reports' %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}" class="text-decoration-none text-white d-flex align-items-center" style="color: #133356; letter-spacing: 1.2px;">
+                <a href="{% url 'list_report' %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.state %}&state={{ request.GET.state }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}{% if request.GET.site %}&site={{ request.GET.site }}{% endif %}" class="text-decoration-none text-white d-flex align-items-center" style="color: #133356; letter-spacing: 1.2px;">
                     <i class="fas fa-caret-left me-2" style="color: #133356;"></i>
                     <p class="lead m-0 p-0" style="color: #133356;">retour</p>
                 </a>
@@ -54,106 +54,112 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_bl|stringformat:"05d" }}/{{ r
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-8" style="margin-bottom: 20px;">
-        <div class="card" style="background: rgba(19, 51, 86, 0.85); border-radius: 2px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); color: #b7b9bd;">
+
+
+<div class="row mt-3">
+    <div class="col-lg-8 col-md-12" style="margin-bottom: 20px;">
+        <div class="card custom-card">
             <div class="card-body p-3">
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">N° {% if report.n_bl  %}BL{% else %}BTR{% endif %}</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
-                            {% if report.n_bl  %}
-                                {{ report.site.prefix_site }}{{ report.n_bl|stringformat:"05d" }}/{{ report.date_dep|date:"y" }}
-                            {% else %}
-                                {{ report.site.btr_prefix_site }}{{ report.n_btr|stringformat:"05d" }}/{{ report.date_dep|date:"y" }}
-                            {% endif %}
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">N° Rapport</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.site.prefix_site }}{{ report.n_report|stringformat:"04d" }}/{{ report.date_in_stock|date:"y" }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">N° BL 2</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
-                            {% if report.n_bl_2  %}{{ report.site.prefix_site }}{{ report.n_bl_2|stringformat:"05d" }}/{{ report.date_dep|date:"y" }}{% else %}/{% endif %}
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">N° Facture</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.n_facture }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">Créer par</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">N° Facture 2</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.n_facture2 }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Créer par</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
                             {{ report.creator }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">Départ</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
-                            {{ report.prix.depart }}
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Créer le</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.date_created }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">Déstination</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
-                            {{ report.prix.destination }} ({{ report.prix.destination.region }})
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Site</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.site }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">Date de départ</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
-                            {{ report.date_dep }}
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Fournisseur</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.fournisseur }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">Fournisseur</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
-                            {{ report.prix.fournisseur }}
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Lieu Déchargement</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.lieu_decharge }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">Tonnage</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
-                            {{ report.prix.tonnage }}
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Transitaire</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.transitor }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">Prix</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
-                            {{ report.prix.price }}
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Camion</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.camion }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">Chauffeur</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
-                            {% if report.chauffeur  %}{{ report.chauffeur }}{% else %}/{% endif %}
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Date Entré au Stock</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.date_in_stock }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">Immatriculation</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
-                           {% if report.immatriculation  %}{{ report.immatriculation }}{% else %}/{% endif %}
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Date Calcule de Cout</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {{ report.date_calc_cost }}
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-2 col-form-label" style="color: #f2f3f2;">Observation</label>
-                    <div class="col-sm-10">
-                        <div class="form-control-plaintext text-white" style="border-bottom: 1px solid rgba(171, 175, 181, 0.4); letter-spacing: 1.2px;">
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Observation</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
                             {% if report.observation  %}{{ report.observation }}{% else %}/{% endif %}
                         </div>
                     </div>
@@ -161,21 +167,428 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_bl|stringformat:"05d" }}/{{ r
             </div>
         </div>
     </div>
-    <div class="col-md-4 justify-content-center">
-        <div class="row">
-            <div class="col-md-12 mt-3">
-                <div class="card mx-auto text-white" id="ptransporteds-card" style="cursor: pointer; background: #486c95; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.6); max-width: 350px;">
-                    <div class="ratio" style="--bs-aspect-ratio: 50%;">
-                        <img src="{% static 'img/ptransporteds.png' %}" class="card-img-top img-fluid" alt="Image Title">
+    <div class="col-lg-4 col-md-12" style="margin-bottom: 20px;">
+        <div class="card custom-card">
+            <div class="card-body p-3">
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Taux de Change</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.exchange_rate }}
+                        </div>
                     </div>
-                    <div class="card-body p-0 mx-auto">
-                        <p class="card-title lead m-3">Produits transportés</p>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Montant Facture</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.facture_amount }} {{ report.facture_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Montant Frais</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.facture_fees }} {{ report.facture_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Connaissement</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.ladding_bill }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Connaissement</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.ladding_bill }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Magasinage</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.shopping }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Douanes Algérienne</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.customs }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">TCS</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.tcs }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">DAPS</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.daps }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">DD</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.dd }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Honorraire Douanes</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.customs_honorary }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Trabsort Locale</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.local_transport }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Autres Frais</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.other_fees }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Surestaries</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.surestaries }} {{ report.local_currency }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Total Dossier</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {{ report.total }} {{ report.local_currency }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div class="card mt-4 mb-4 custom-card">
+    <div class="card-header card-header-secondary">
+        <p class="card-title lead" style="font-size: 26px; color: #45558A;">Produits Importés</p>
+    </div>
+
+    <div style="padding: 20px; overflow-x: scroll; max-width: 90vw;">
+        <table class="table table-hover table-striped" style="text-align: center;">
+            <thead style="border-color: white;">
+                <th class="d-none d-md-table-cell thPR">Produit</th>
+                <th class="d-none d-md-table-cell">Qte</th>
+                <th class="d-none d-md-table-cell">Prix EXW</th>
+                <th class="d-none d-md-table-cell">Frais</th>
+                <th class="d-none d-md-table-cell">DZD</th>
+                <th class="d-none d-md-table-cell">TCS</th>
+                <th class="d-none d-md-table-cell">Montant TCS</th>
+                <th class="d-none d-md-table-cell">DD</th>
+                <th class="d-none d-md-table-cell">Montant DD</th>
+                <th class="d-none d-md-table-cell">DAPS</th>
+                <th class="d-none d-md-table-cell">Montant DAPS</th>
+                <th class="d-none d-md-table-cell">Montant Divers</th>
+                <th class="d-none d-md-table-cell">Total</th>
+                <th class="d-none d-md-table-cell">Cout / U</th>
+                <th class="d-none d-md-table-cell">Nombre Palletes</th>
+                <th class="d-none d-md-table-cell">Répartition</th>
+            </thead>
+            <tbody>
+                {% for pimported in report.pimporteds.all %}
+                    <tr class="trS">
+                        <td class="tdPR">
+                            <div>
+                                <p class="tdLabel">Produit</p>
+                                <p class="valueLead mb-0">[{{ pimported.article_code }}] {{ pimported.article_designation }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">Quantité</p>
+                                <p class="valueLead mb-0">{{ pimported.qte }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">Prix EXW</p>
+                                <p class="valueLead mb-0">{{ pimported.prix_exw }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">Frais</p>
+                                <p class="valueLead mb-0">{% if pimported.fret > 0 %}{{ pimported.fret }} {{ pimported.foreign_currency }}{% else %}/{% endif %}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">DZD</p>
+                                <p class="valueLead mb-0">{% if pimported.dzd > 0 %}{{ pimported.dzd }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">TCS</p>
+                                <p class="valueLead mb-0">{{ pimported.tcs }}%</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">Montant TCS</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_tcs }} {{ pimported.local_currency }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">DD</p>
+                                <p class="valueLead mb-0">{{ pimported.dd }} {{ pimported.local_currency }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">Montant DD</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_dd }} {{ pimported.local_currency }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">DAPS</p>
+                                <p class="valueLead mb-0">{{ pimported.daps }} {{ pimported.local_currency }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">Montant DAPS</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_daps }} {{ pimported.local_currency }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">Montant Divers</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_diver }} {{ pimported.local_currency }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">Total</p>
+                                <p class="valueLead mb-0">{{ pimported.total }} {{ pimported.local_currency }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">Cout / U</p>
+                                <p class="valueLead mb-0">{{ pimported.cost_u }}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <p class="tdLabel">Nombre Palletes</p>
+                                <p class="valueLead mb-0">{{ pimported.nbr_blt }}</p>
+                            </div>
+                        </td>
+                        <td class="tdLast">
+                            <div>
+                                <p class="tdLabel">Répartition</p>
+                                <p class="valueLead mb-0">{{ pimported.repartition }}%</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr class="trS">
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                        <td>Pas d'enregistrements.</td>
+                    </tr>
+                {% endfor %}
+                <tr class="trS" style="border-bottom: 1px solid #dee2e6;">
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
+                </tr>
+                <tr class="trS">
+                    <td>
+                        <div>
+                            <p>Total</p>
+                        </div>
+                    </td>                    
+                    <td>
+                        <div>
+                            <p class="tdLabel">Quantité Total</p>
+                            <p class="valueLead mb-0">{{report.total_products_qte}}</p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td>
+                        <div>
+                            <p class="tdLabel">Frais Total</p>
+                            <p class="valueLead mb-0">{{report.total_products_fret}} {{report.facture_currency}}</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <p class="tdLabel">DZD Total</p>
+                            <p class="valueLead mb-0">{{report.total_products_dzd}} {{report.local_currency}}</p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td>
+                        <div>
+                            <p class="tdLabel">Montant TCS Total</p>
+                            <p class="valueLead mb-0">{{report.total_products_mnt_tcs}} {{report.local_currency}}</p>
+                        </div>
+                    </td>
+                    <td></td>
+                    
+                    <td>
+                        <div>
+                            <p class="tdLabel">Montant DD Total</p>
+                            <p class="valueLead mb-0">{{report.total_products_mnt_dd}} {{report.local_currency}}</p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td>
+                        <div>
+                            <p class="tdLabel">Montant DAPS Total</p>
+                            <p class="valueLead mb-0">{{report.total_products_mnt_daps}} {{report.local_currency}}</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <p class="tdLabel">Montant Divers Total</p>
+                            <p class="valueLead mb-0">{{report.total_products_mnt_diver}} {{report.local_currency}}</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <p class="tdLabel">Montant Total</p>
+                            <p class="valueLead mb-0">{{report.total_products_total}} {{report.local_currency}}</p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td>
+                        <div>
+                            <p class="tdLabel">Nombre Palletes Total</p>
+                            <p class="valueLead mb-0">{{report.total_products_nbr_plt}}</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <p class="tdLabel">Répartition Total</p>
+                            <p class="valueLead mb-0">{{report.total_products_repartition}}%</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<style>
+    th, td { min-width: 10vw; }
+    .thPR, .tdPR { min-width: 20vw; }
+    .monetary{
+        text-align: right;
+    }
+    .tdLabel{
+        display: none;
+    }
+    .trS {
+        border-color: transparent; 
+        color: #00254a;
+    }
+    .dateStyle{
+        margin-left: auto; 
+    }
+    
+    @media only screen and (max-width: 767px) {
+        .dateStyle{
+            color: #747474;
+        }
+        .headerStyle{
+            color: #0c2858;
+            font-weight: bold;
+        }
+        td {
+            display: block;
+            width: 100%;
+            text-align: left;
+            box-sizing: border-box;
+            margin: 0 0 2px 10px;
+        }
+        .trS {
+            border-left: 4px solid #8b99b0;
+            border-radius: 5px;
+            color: #5b5b5b;
+            border-top: 10px solid transparent;
+        }
+        .tdLast{
+            border-bottom: 2px solid white;
+        }
+        .valueLead{
+            font-size: 16px;
+        }
+        .tdLabel{
+            display: block;
+            color: #929292; 
+            font-size: 16px; 
+            margin-bottom: 5px;
+        }
+    }
+</style>
+
 <script>
     const confirmRepCan = (repID) => {
         swal({ 
@@ -194,5 +607,4 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_bl|stringformat:"05d" }}/{{ r
             }});
       }
 </script>
-{% include 'pimported_modal.html' %}
 {% endblock %}

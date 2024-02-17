@@ -40,11 +40,11 @@
               {% endif %}
                 <div class="d-flex" style="width: 100%; margin: 5px 10px;">
                   {% block activeCreateReport %}{% endblock %}
-                  <h4 class="mx-auto"><a href="{% url 'home' %}" class="text-reset"><i class="fas fa-file-circle-plus menu_item"></i></a></h4>
+                  <h4 class="mx-auto"><a href="{% url 'create_report' %}" class="text-reset"><i class="fas fa-file-circle-plus menu_item"></i></a></h4>
                 </div>
               <div class="d-flex" style="width: 100%; margin: 0px 10px;">
                 {% block activeListReport %}{% endblock %}
-                <h4 class="mx-auto"><a href="{% url 'home' %}" class="text-reset"><i class="fas fa-rectangle-list menu_item"></i></a></h4>
+                <h4 class="mx-auto"><a href="{% url 'list_report' %}" class="text-reset"><i class="fas fa-rectangle-list menu_item"></i></a></h4>
               </div>
               <div class="d-flex" style="width: 100%; margin: 5px 10px;">
                 {% if user.is_admin %}
@@ -67,7 +67,10 @@
                     <li class="nav-item dropdown dropend list-unstyled">
                       <a class="nav-link text-reset" style="padding: 5px 1.5px;" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="fas fa-gear menu_item"></i></a>
                         <ul class="dropdown-menu list-unstyled">
-                        <li><a href="{% url 'sites' %}" class="dropdown-item">Usines</a></li>
+                        <li><a href="{% url 'sites' %}" class="dropdown-item">Sites</a></li>
+                        <li><a href="{% url 'emplacements' %}" class="dropdown-item">Emplacements</a></li>
+                        <li><a href="{% url 'transitors' %}" class="dropdown-item">Transitaires</a></li>
+                        <li><a href="{% url 'currencies' %}" class="dropdown-item">Devises</a></li>
                       </ul>
                     </li>
                   </h4>
@@ -91,7 +94,7 @@
             <div class="col-md-12 d-flex justify-content-end p-0">
               <div class="d-flex flex-column align-items-center justify-content-center centered-text float-end m-2">
                 <p class="lead p-0 m-0 nameStyle">{{ user.fullname }}</p>
-                <p class="p-0 roleStyle">{{ user.role }}</p>
+                <p class="p-0 roleStyle">&nbsp;</p>
               </div>
             </div>
           </div>

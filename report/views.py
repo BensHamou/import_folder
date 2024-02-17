@@ -27,7 +27,7 @@ def check_creator(view_func):
         elif 'pk' in kwargs:
             rep_id = kwargs['pk']
         report = Report.objects.get(id=rep_id)
-        if report.creator != request.user and request.user.is_admin:
+        if report.creator != request.user and not request.user.is_admin:
             return render(request, '403.html', status=403)
         return view_func(request, *args, **kwargs)
     return wrapper
@@ -287,7 +287,7 @@ class ReportInline():
             url_path = reverse('view_report', args=[self.object.pk])
             redirect_url = f'{url_path}?cache={cache_param}'
             return redirect(redirect_url)
-        return redirect('reports')
+        return redirect('list_report')
 
     def formset_pimporteds_valid(self, formset):
         pimporteds = formset.save(commit=False)
@@ -434,14 +434,14 @@ def cancelReport(request, pk):
 def live_search(request):
     search_for = request.GET.get('search_for', '')
     term = request.GET.get('search_term', '')
-    if search_for == 'supplier':
+    if search_for == 'fournisseur':
         records = getFournisseurId(term)
         if len(records) > 0:
-            data = [{'id': obj[0], 'name': obj[1]} for obj in records]
-    if search_for == 'product':
+            return JsonResponse([{'id': obj[0], 'name': obj[1]} for obj in records], safe=False)
+        
+    elif 'article_code' in search_for:
         records = getProductId(term)
         if len(records) > 0:
-            data = [{'id': obj[0], 'code': obj[1], 'name': obj[2]} for obj in records]
-    else:
-        data = []
-    return JsonResponse(data, safe=False)
+            return JsonResponse([{'id': obj[0], 'name': obj[1], 'code': obj[2]} for obj in records], safe=False)
+        
+    return JsonResponse([], safe=False)

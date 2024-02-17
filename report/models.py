@@ -89,52 +89,52 @@ class Report(models.Model):
         tcs = self.tcs or 0
         daps = self.daps or 0
         dd = self.dd or 0
-        return ( (self.facture_amount + self.facture_fees) * self.exchange_rate + self.ladding_bill + self.shopping + 
-                self.customs + tcs + daps + dd + self.customs_honorary + self.local_transport + self.other_fees + self.surestaries)
+        return round(( (self.facture_amount + self.facture_fees) * self.exchange_rate + self.ladding_bill + self.shopping + 
+                self.customs + tcs + daps + dd + self.customs_honorary + self.local_transport + self.other_fees + self.surestaries), 2)
 
     @property
     def total_products_qte(self):
-        return sum([product.qte for product in self.pimported_set.all()])
+        return round(sum([product.qte for product in self.pimported_set.all()]), 2)
 
     @property
     def total_products_fret(self):
-        return sum([product.fret for product in self.pimported_set.all()])
+        return round(sum([product.fret for product in self.pimported_set.all()]), 2)
 
     @property
     def total_products_dzd(self):
-        return sum([product.dzd for product in self.pimported_set.all()])
+        return round(sum([product.dzd for product in self.pimported_set.all()]), 2)
 
     @property
     def total_products_mnt_tcs(self):
-        return sum([product.mnt_tcs for product in self.pimported_set.all()])
+        return round(sum([product.mnt_tcs for product in self.pimported_set.all()]), 2)
 
     @property
     def total_products_mnt_dd(self):
-        return sum([product.mnt_dd for product in self.pimported_set.all()])
+        return round(sum([product.mnt_dd for product in self.pimported_set.all()]), 2)
 
     @property
     def total_products_mnt_daps(self):
-        return sum([product.mnt_daps for product in self.pimported_set.all()])
+        return round(sum([product.mnt_daps for product in self.pimported_set.all()]), 2)
 
     @property
     def total_products_mnt_diver(self):
-        return sum([product.mnt_diver for product in self.pimported_set.all()])
+        return round(sum([product.mnt_diver for product in self.pimported_set.all()]), 2)
 
     @property
     def total_products_total(self):
-        return sum([product.total for product in self.pimported_set.all()])
+        return round(sum([product.total for product in self.pimported_set.all()]), 2)
 
     @property
     def total_products_nbr_plt(self):
-        return sum([product.nbr_blt for product in self.pimported_set.all()])
+        return round(sum([product.nbr_blt for product in self.pimported_set.all()]), 2)
 
     @property
     def total_products_repartition(self):
-        return sum([product.repartition for product in self.pimported_set.all()])
+        return round(sum([product.repartition for product in self.pimported_set.all()]), 2)
     
     @property
     def gap(self):
-        return self.total - self.total_products_total
+        return round(self.total - self.total_products_total, 2)
     
     def pimporteds(self):
         return self.pimported_set.all()
@@ -172,36 +172,36 @@ class PImported(models.Model):
 
     @property
     def fret(self):
-        return self.repartition * self.report.facture_fees
+        return round(self.repartition * self.report.facture_fees  / 100, 2)
     
     @property
     def dzd(self):
-        return ((self.qte * self.prix_exw) + self.fret)  * self.report.exchange_rate
+        return round(((self.qte * self.prix_exw) + self.fret)  * self.report.exchange_rate, 2)
     
     @property
     def mnt_tcs(self):
-        return self.tcs  * self.dzd
+        return round(self.tcs  * self.dzd, 2)
     
     @property
     def mnt_dd(self):
-        return self.dd  * self.dzd
+        return round(self.dd  * self.dzd, 2)
     
     @property
     def mnt_daps(self):
-        return self.daps  * self.dzd
+        return round(self.daps  * self.dzd, 2)
     
     @property
     def mnt_diver(self):
-        return (self.report.customs_honorary + self.report.local_transport + self.report.other_fees + self.report.surestaries + 
-                self.report.ladding_bill + self.report.shopping + self.report.customs) * self.repartition
+        return round((self.report.customs_honorary + self.report.local_transport + self.report.other_fees + self.report.surestaries + 
+                self.report.ladding_bill + self.report.shopping + self.report.customs) * self.repartition / 100, 2)
     
     @property
     def total(self):
-        return (self.dzd + self.mnt_tcs + self.mnt_dd + self.mnt_daps + self.mnt_diver) * self.repartition
+        return round((self.dzd + self.mnt_tcs + self.mnt_dd + self.mnt_daps + self.mnt_diver) * self.repartition / 100, 2)
     
     @property
     def cost_u(self):
-        return self.qte * self.total
+        return round(self.total / self.qte, 2)
 
     def __str__(self):
         return self.article_code + self.article_designation + " - " + self.repartition + "% (R" + str(self.report.id) +")"

@@ -19,11 +19,11 @@ def execute_query(query, params=None):
     return records
 
 def getFournisseurId(supplier_name):
-    query = """SELECT id, name FROM res_partner he WHERE name ILIKE %s AND supplier = true and state = 'validate' LIMIT 5;"""
+    query = """SELECT id, name FROM res_partner WHERE name ILIKE %s AND supplier = true AND state = 'validate' LIMIT 5;"""
     params = ('%' + supplier_name.upper() + '%',)
     return execute_query(query, params)
 
 def getProductId(product_name):
-    query = """SELECT id, name, ref FROM product_template he WHERE name ILIKE %s LIMIT 5;"""
+    query = """SELECT id, name, template_code FROM product_template he WHERE template_code ILIKE %s AND company_id = 8 LIMIT 5;"""
     params = ('%' + product_name.upper() + '%',)
     return execute_query(query, params)

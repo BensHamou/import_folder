@@ -11,15 +11,17 @@ def getAttrs(type, placeholder='', other={}):
         'control': {'class': 'form-control', 'style': 'background-color: #e0e5f5;', 'placeholder': ''},
         'controlReq': {'class': 'form-control', 'autocomplete': "off", 'style': 'background-color: #dad2ff; border-color: #dad2ff;', 'placeholder': ''},
         'controlIDReq': {'class': 'form-control search-input-id', 'autocomplete': "off", 'style': 'background-color: #dad2ff; border-color: #dad2ff;', 'placeholder': ''},
+        'controlIDTDReq': {'class': 'form-control search-input-id-td', 'autocomplete': "off", 'style': 'background-color: #dad2ff; border-color: #dad2ff;', 'placeholder': ''},
         'search': {'class': 'form-control form-input', 'style': 'background-color: rgba(202, 207, 215, 0.5); box-shadow: 0 0 6px rgba(0, 0, 0, 0.2); color: #45558a; height: 40px; text-indent: 33px; border-radius: 5px;', 'type': 'search', 'placeholder': '', 'id': 'search'},
         'controlSearchReq': {'class': 'form-control search-input', 'autocomplete': "off", 'style': 'background-color: #dad2ff; border-color: #dad2ff;', 'placeholder': ''},
+        'controlSearchTDReq': {'class': 'form-control search-input-td', 'autocomplete': "off", 'style': 'background-color: #dad2ff; border-color: #dad2ff;', 'placeholder': ''},
         'select': {'class': 'form-select', 'style': 'background-color: #e0e5f5;'},
         'selectReq': {'class': 'form-select', 'style': 'background-color: #dad2ff; border-color: #dad2ff;'},
         'select2': {'class': 'form-select custom-select', 'style': 'background-color: #e0e5f5; width: 100%;'},
         'select2Req': {'class': 'form-select custom-select', 'style': 'background-color: #dad2ff; border-color: #dad2ff; width: 100%;'},
         'date': {'type': 'date', 'class': 'form-control dateinput','style': 'background-color: #e0e5f5;'},
         'dateReq': {'type': 'date', 'class': 'form-control dateinput', 'style': 'background-color: #dad2ff; border-color: #dad2ff;'},
-        'datetime': {'type': 'datetime-local', 'class': 'form-control dateinput','style': 'background-color: #e0e5f5;'},
+        'datetime': {'type': 'datetime-local', 'class': 'form-control dateinput','style': 'background-color: #dad2ff; border-color: #dad2ff; '},
         'textarea': {"rows": "3", 'style': 'width: 100%', 'class': 'form-control', 'placeholder': '', 'style': 'background-color: #e0e5f5;'}
     }
 
@@ -30,6 +32,7 @@ def getAttrs(type, placeholder='', other={}):
             attributes['placeholder'] = placeholder
         if other:
             attributes.update(other)
+            attributes
         return attributes
     else:
         return {}
@@ -73,22 +76,22 @@ class ReportForm(ModelForm):
     transitor = forms.ModelChoiceField(queryset=Transitor.objects.all(), widget=forms.Select(attrs= getAttrs('select2Req')), empty_label="Transitaire")
     n_facture2 = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'N° Facture 2')), required=False)
     camion = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Camion')))
-    date_in_stock = forms.DateField(initial=timezone.now().date(), widget=forms.widgets.DateInput(attrs= getAttrs('date'), format='%Y-%m-%d'))
-    date_calc_cost = forms.DateField(initial=timezone.now().date(), widget=forms.widgets.DateInput(attrs= getAttrs('date'), format='%Y-%m-%d'))
+    date_in_stock = forms.DateField(initial=timezone.now().date(), widget=forms.widgets.DateInput(attrs= getAttrs('dateReq'), format='%Y-%m-%d'))
+    date_calc_cost = forms.DateField(initial=timezone.now().date(), widget=forms.widgets.DateInput(attrs= getAttrs('dateReq'), format='%Y-%m-%d'))
 
     exchange_rate = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Taux de Cahnge')))
     facture_amount = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Montant Facture')))
     facture_fees = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Montant Fret')))
-    facture_currency = forms.ModelChoiceField(queryset=Currency.objects.all(), widget=forms.Select(attrs= getAttrs('select')), empty_label="Devise")
+    facture_currency = forms.ModelChoiceField(queryset=Currency.objects.all(), widget=forms.Select(attrs= getAttrs('selectReq')), empty_label="Devise")
 
     ladding_bill = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Connaissement')))
     shopping = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Magasinage')))
     customs = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Douanes Algerienne')))
-    local_currency = forms.ModelChoiceField(queryset=Currency.objects.all(), widget=forms.Select(attrs= getAttrs('select')), empty_label="Devise")
+    local_currency = forms.ModelChoiceField(queryset=Currency.objects.all(), widget=forms.Select(attrs= getAttrs('selectReq')), empty_label="Devise")
 
-    tcs = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','TCS')))
-    daps = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','DAPS')))
-    dd = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','DD')))
+    tcs = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('control','TCS')), required=False)
+    daps = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('control','DAPS')), required=False)
+    dd = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('control','DD')), required=False)
     
     customs_honorary = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Honorraire Douanes')))
     local_transport = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Transport Local')))
@@ -131,24 +134,23 @@ class ReportForm(ModelForm):
 class PImportedForm(ModelForm):
     class Meta:
         model = PImported
-        fields = ['article_code', 'article_designation', 'article_id', 'qte', 'prix_exw', 'tcs', 'dd', 'daps', 'site', 'nbr_blt', 'repartition']
+        fields = ['article_id', 'article_code', 'article_designation', 'qte', 'prix_exw', 'tcs', 'dd', 'daps', 'nbr_blt', 'repartition']
     
     min_max = {'max': '100', 'min': '0', 'step': '0.001'}
     min = {'min': '0', 'step': '0.001'}
 
-    article_code = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchReq','Code')))
-    article_designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchReq','Designation')))
-    article_id = forms.IntegerField(widget=forms.HiddenInput(attrs=getAttrs('controlIDReq','ID_fournisseur_id')))
+    article_code = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchTDReq','Code')))
+    article_designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq','Designation', {'disabled': 'disabled'})))
+    article_id = forms.IntegerField(widget=forms.HiddenInput(attrs=getAttrs('controlIDTDReq','ID_fournisseur_id')))
     qte = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Quantité', min)))
-    prix_exw = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Prix EXW', min)))
-    tcs = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','TCS', min_max)))
-    dd = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','DD', min)))
-    daps = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','DAPS', min)))
+    prix_exw = forms.FloatField(label='Prix EXW', widget=forms.NumberInput(attrs= getAttrs('controlReq','Prix EXW', min)))
+    tcs = forms.FloatField(label='TCS', widget=forms.NumberInput(attrs= getAttrs('control','TCS', min_max)), required=False)
+    dd = forms.FloatField(label='DD', widget=forms.NumberInput(attrs= getAttrs('control','DD', min)), required=False)
+    daps = forms.FloatField(label='DAPS', widget=forms.NumberInput(attrs= getAttrs('control','DAPS', min)), required=False)
     
-    nbr_blt = forms.IntegerField(widget=forms.HiddenInput(attrs=getAttrs('controlReq','Nombre Pallete')))
-    repartition = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Répartition', min)))
+    nbr_blt = forms.IntegerField(label='Nombre Palletes', widget=forms.NumberInput(attrs= getAttrs('controlReq','Nombre Pallete')))
+    repartition = forms.FloatField(label='Répartition', widget=forms.NumberInput(attrs= getAttrs('controlReq','Répartition', min)))
 
 PImportedsFormSet = inlineformset_factory(Report, PImported, form=PImportedForm, 
                                           fields=['article_code', 'article_designation', 'article_id', 'qte', 'prix_exw', 
-                                                  'tcs', 'dd', 'daps', 'site', 'nbr_blt', 'repartition'], 
-                                          extra=0)
+                                                  'tcs', 'dd', 'daps', 'nbr_blt', 'repartition'], extra=0)
