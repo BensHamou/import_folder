@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 class Site(models.Model):
     designation = models.CharField(max_length=100)
     address = models.CharField(max_length=250, null=True)
-    prefix_site = models.CharField(max_length=6, blank=True, null=True)
+    prefix_site = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
         return self.designation

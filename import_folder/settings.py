@@ -83,11 +83,11 @@ DATABASES = {
     } 
     #'default': {
     #    'ENGINE': 'django.db.backends.postgresql',
-    #    'NAME': 'TransDB',
-    #    'USER': 'trans_report',
-    #    'PASSWORD': 'trans_report',
+    #    'NAME': 'ImportDB',
+    #    'USER': 'import_report',
+    #    'PASSWORD': 'import_report',
     #    'HOST': '10.10.10.53',
-    #    'PORT': '5469',
+    #    'PORT': '5422',
     #}
     #'default': {
     #    'ENGINE': 'django.db.backends.postgresql',
