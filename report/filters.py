@@ -16,17 +16,6 @@ class EmplacementFilter(FilterSet):
         model = Emplacement
         fields = ['search']
 
-class CurrencyFilter(FilterSet):
-
-    search = CharFilter(method='filter_search', widget=forms.TextInput(attrs=getAttrs('search', 'Rechercher Devise..') ))
-
-    def filter_search(self, queryset, name, value):
-        return queryset.filter(Q(designation__icontains=value)).distinct()
-
-    class Meta:
-        model = Currency
-        fields = ['search']
-
 class TransitorFilter(FilterSet):
 
     search = CharFilter(method='filter_search', widget=forms.TextInput(attrs=getAttrs('search', 'Rechercher Transitaire..') ))

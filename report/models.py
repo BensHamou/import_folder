@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import User, Site
+from account.models import User, Site, Currency
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Setting(models.Model):
@@ -25,13 +25,6 @@ class Emplacement(models.Model):
         return self.designation
 
 class Transitor(models.Model):
-
-    designation = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.designation
-
-class Currency(models.Model):
 
     designation = models.CharField(max_length=100)
 
@@ -152,9 +145,9 @@ class PImported(models.Model):
     article_designation = models.CharField(max_length=255, blank=True, null=True)
     qte = models.FloatField(default=0, validators=[MinValueValidator(0)])
     prix_exw = models.FloatField(default=0, validators=[MinValueValidator(0)])
-    tcs = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    dd = models.FloatField(default=0, validators=[MinValueValidator(0)])
-    daps = models.FloatField(default=0, validators=[MinValueValidator(0)])
+    tcs = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)],null=True)
+    dd = models.FloatField(default=0, validators=[MinValueValidator(0)], null=True)
+    daps = models.FloatField(default=0, validators=[MinValueValidator(0)], null=True)
     
     nbr_blt = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     repartition = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
@@ -180,15 +173,18 @@ class PImported(models.Model):
     
     @property
     def mnt_tcs(self):
-        return round(self.tcs  * self.dzd, 2)
+        tcs = self.tcs or 0
+        return round(tcs  * self.dzd / 100, 2)
     
     @property
     def mnt_dd(self):
-        return round(self.dd  * self.dzd, 2)
+        dd = self.dd or 0
+        return round(dd  * self.dzd, 2)
     
     @property
     def mnt_daps(self):
-        return round(self.daps  * self.dzd, 2)
+        daps = self.daps or 0
+        return round(daps  * self.dzd, 2)
     
     @property
     def mnt_diver(self):
@@ -201,7 +197,7 @@ class PImported(models.Model):
     
     @property
     def cost_u(self):
-        return round(self.total / self.qte, 2)
+        return round(self.total / self.qte, 3)
 
     def __str__(self):
         return self.article_code + self.article_designation + " - " + self.repartition + "% (R" + str(self.report.id) +")"

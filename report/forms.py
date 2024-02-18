@@ -44,14 +44,7 @@ class EmplacementForm(ModelForm):
     
     designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control','Désignation')))
     region = forms.ChoiceField(choices=Emplacement.REGION, widget=forms.Select(attrs=getAttrs('select')))
-    
-class CurrencyForm(ModelForm):
-    class Meta:
-        model = Currency
-        fields = ['designation']
-
-    designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Désignation')))
-    
+       
 class TransitorForm(ModelForm):
     class Meta:
         model = Transitor
@@ -111,6 +104,8 @@ class ReportForm(ModelForm):
         if sites is not None:
             self.fields['site'].queryset = sites
             self.fields['site'].initial = sites.first()
+            self.fields['facture_currency'].initial = sites.first().default_foreign_currency
+            self.fields['local_currency'].initial = sites.first().default_local_currency
             if not admin and len(sites) < 2:
                 self.fields['site'].widget.attrs['disabled'] = True
     

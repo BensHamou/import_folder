@@ -39,6 +39,20 @@
           </div>
         </div>
       </div>
+      <div class="row mb-4">
+        <div class="col-lg-6 col-md-12 col-sm-12">
+          <div class="form-outline">
+            <label class="form-label labelCustom" for="default_local_currency">Devise Locale Par Défault</label>
+              {{ form.default_local_currency }}
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-12 col-sm-12">
+          <div class="form-outline">
+            <label class="form-label labelCustom" for="default_foreign_currency">Devise Étrangère Par Défault</label>
+              {{ form.default_foreign_currency }}
+          </div>
+        </div>
+      </div>
   </div>
   <div class="float-end mt-4">
     <input type='submit' class="btn btn-success customSaveButton" name='save' value="Sauvgardez"/>

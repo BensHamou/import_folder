@@ -17,6 +17,11 @@ urlpatterns = [
     path("site/edit-site/<int:id>", views.editSiteView, name="edit_site"),
     path("site/create-site/", views.createSiteView, name="create_site"),
     
+    path('currencies/', views.listCurrencyView, name='currencies'),
+    path("currencies/delete-currency/<int:id>", views.deleteCurrencyView, name="delete_currency"),
+    path("currencies/edit-currency/<int:id>", views.editCurrencyView, name="edit_currency"),
+    path("currencies/create-currency/", views.createCurrencyView, name="create_currency"),
+    
     path('login/', CustomLoginView.as_view(), name='login'),
     path('accounts/login/', CustomLoginView.as_view(), name='login'),
     path('logout/', views.logoutView, name='logout'),

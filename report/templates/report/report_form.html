@@ -15,476 +15,586 @@ Rapport
 </a>
 </div>
 <h4 class="mb-4" style="color: #133356;">{% if report %}Modification du rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/{{ report.date_in_stock|date:"y" }}{% else %}Création d'un rapport{% endif %}</h4>
-
-<form class="container" method="POST" id="report_form">
+<button id="toggleButton" type="button" class="btn btn-secondary">Produits ></button>
+<form class="container m-0 p-0" method="POST" id="report_form" style="width: 100%">
     {% csrf_token %}
     {% if form.instance.pk %}
         <input type="hidden" value="1" id="isUpdating"/> 
     {% endif %}
-    <div class="card card-body mb-5 custom-card">
-        <!-- SITE - N RAPPORT - N Facture - N Facture 2 -->
-        <div class="row mb-4">
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="site">Site</label>
-                    {{ form.site }}
-                    {% if form.site.errors %}
-                        <div style="color: red;">
-                        {% for error in form.site.errors %}
-                            *{{ error }}
-                        {% endfor %}
+    <div id="detailReport"  class="row mt-3" style="width: 92vw;">
+        <div class="card card-body mb-5 custom-card col-lg-5 col-md-5 col-sm-12">
+            <div class="row mb-4">
+                <!-- SITE - N RAPPORT - N Facture - N Facture 2 -->
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="site">Site</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.site }}
+                                {% if form.site.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.site.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="n_report">N° Rapport</label>
-                    {{ form.n_report }}
-                    {% if form.n_report.errors %}
-                        <div style="color: red;">
-                        {% for error in form.n_report.errors %}
-                            *{{ error }}
-                        {% endfor %}
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="n_report">N° Rapport</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.n_report }}
+                                {% if form.n_report.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.n_report.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="n_facture">N° Facture</label>
-                    {{ form.n_facture }}
-                    {% if form.n_facture.errors %}
-                        <div style="color: red;">
-                        {% for error in form.n_facture.errors %}
-                            *{{ error }}
-                        {% endfor %}
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="n_facture">N° Facture</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.n_facture }}
+                                {% if form.n_facture.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.n_facture.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="n_facture2">N° Facture 2</label>
-                    {{ form.n_facture2 }}
-                    {% if form.n_facture2.errors %}
-                        <div style="color: red;">
-                        {% for error in form.n_facture2.errors %}
-                            *{{ error }}
-                        {% endfor %}
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="n_facture2">N° Facture 2</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.n_facture2 }}
+                                {% if form.n_facture2.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.n_facture2.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
-                    {% endif %}
+                    </div>
                 </div>
-            </div>
-        </div>
-        <!-- FOURNISSEUR - LIEU DECHARGEMENT - TRANSITAIRE - CAMION -->
-        <div class="row mb-4">
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="fournisseur">Fournisseur</label>
-                    {{ form.fournisseur }}
-                    {{ form.fournisseur_id }}
-                    <div id="suggestions" class="sugdiv"></div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="lieu_decharge">Lieu Déchargement</label>
-                    {{ form.lieu_decharge }}
-                    {% if form.lieu_decharge.errors %}
-                        <div style="color: red;">
-                        {% for error in form.lieu_decharge.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="transitor">Transitaire</label>
-                    {{ form.transitor }}
-                    {% if form.transitor.errors %}
-                        <div style="color: red;">
-                        {% for error in form.transitor.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="camion">Camion</label>
-                    {{ form.camion }}
-                    {% if form.camion.errors %}
-                        <div style="color: red;">
-                        {% for error in form.camion.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <!-- DATE ENTRE AU STOCK - DATE CALCUL DE COUT  -->
-        <div class="row mb-4">
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="date_in_stock">Date Entré au Stock</label>
-                    {{ form.date_in_stock }}
-                    {% if form.date_in_stock.errors %}
-                        <div style="color: red;">
-                        {% for error in form.date_in_stock.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="date_calc_cost">Date Calcul de Cout</label>
-                    {{ form.date_calc_cost }}
-                    {% if form.date_calc_cost.errors %}
-                        <div style="color: red;">
-                        {% for error in form.date_calc_cost.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card card-body mb-5 custom-card">
-        <!-- TAUX DE CHANGE - MONTANT FACTURE - MONTANT FRET - CURRENCY FOREIGN -->
-        <div class="row mb-4">
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="exchange_rate">Taux de Change</label>
-                    {{ form.exchange_rate }}
-                    {% if form.exchange_rate.errors %}
-                        <div style="color: red;">
-                        {% for error in form.exchange_rate.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="facture_amount">Montant Facture</label>
-                    {{ form.facture_amount }}
-                    {% if form.facture_amount.errors %}
-                        <div style="color: red;">
-                        {% for error in form.facture_amount.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="facture_fees">Montant Frais</label>
-                    {{ form.facture_fees }}
-                    {% if form.facture_fees.errors %}
-                        <div style="color: red;">
-                        {% for error in form.facture_fees.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="facture_currency">Devise</label>
-                    {{ form.facture_currency }}
-                    {% if form.facture_currency.errors %}
-                        <div style="color: red;">
-                        {% for error in form.facture_currency.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <!-- CONNAISSEMENT - MAGASINAGE - DOUANES ALGERIENNE - CURRENCY LOCAL -->
-        <div class="row mb-4">
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="exchange_rate">Connaissement</label>
-                    {{ form.ladding_bill }}
-                    {% if form.ladding_bill.errors %}
-                        <div style="color: red;">
-                        {% for error in form.ladding_bill.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="facture_amount">Magasinage</label>
-                    {{ form.shopping }}
-                    {% if form.shopping.errors %}
-                        <div style="color: red;">
-                        {% for error in form.shopping.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="facture_fees">Douanes Algérienne</label>
-                    {{ form.customs }}
-                    {% if form.customs.errors %}
-                        <div style="color: red;">
-                        {% for error in form.customs.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="facture_currency">Devise</label>
-                    {{ form.local_currency }}
-                    {% if form.local_currency.errors %}
-                        <div style="color: red;">
-                        {% for error in form.local_currency.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <!-- TCS - DAPS - DD  -->
-        <div class="row mb-4">
-            <div class="col-lg-4 col-md-4 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="tcs">TCS</label>
-                    {{ form.tcs }}
-                    {% if form.tcs.errors %}
-                        <div style="color: red;">
-                        {% for error in form.tcs.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="daps">DAPS</label>
-                    {{ form.daps }}
-                    {% if form.daps.errors %}
-                        <div style="color: red;">
-                        {% for error in form.daps.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="dd">DD</label>
-                    {{ form.dd }}
-                    {% if form.dd.errors %}
-                        <div style="color: red;">
-                        {% for error in form.dd.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <!-- HONORRAIRE DOUANES - TRANSPORT LOCAL - AUTRES FRAIS - SERUSTARIES -->
-        <div class="row mb-4">
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="customs_honorary">Honorraire Douanes</label>
-                    {{ form.customs_honorary }}
-                    {% if form.customs_honorary.errors %}
-                        <div style="color: red;">
-                        {% for error in form.customs_honorary.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="local_transport">Transport Local</label>
-                    {{ form.local_transport }}
-                    {% if form.local_transport.errors %}
-                        <div style="color: red;">
-                        {% for error in form.local_transport.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="other_fees">Autres Frais</label>
-                    {{ form.other_fees }}
-                    {% if form.other_fees.errors %}
-                        <div style="color: red;">
-                        {% for error in form.other_fees.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="surestaries">Serustaries</label>
-                    {{ form.surestaries }}
-                    {% if form.surestaries.errors %}
-                        <div style="color: red;">
-                        {% for error in form.surestaries.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <!-- OBSERVATION -->
-        <div class="row mb-4">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="form-outline">
-                    <label class="form-label mt-2 labelCustom" for="observation">Observation</label>
-                    {{ form.observation }}
-                    {% if form.observation.errors %}
-                        <div style="color: red;">
-                        {% for error in form.observation.errors %}
-                            *{{ error }}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-  {% with named_formsets.pimporteds as formset %}
-      {{ formset.management_form }}
-      <script type="text/html" id="pimporteds-template">
-          <tr id="pimporteds-__prefix__" class= hide_all>
-            
-                {% for fields in formset.empty_form.hidden_fields %}
-                    {{ fields }}
-                {% endfor %}
-                <td></td>
-                {% for field in formset.empty_form.visible_fields %}
-                
-                <td>
-                    {% if field.label == 'Supprimer' %}
-                        <div class="d-flex justify-content-center">
-                            <button type="button" onclick="deleteRow(this.parentNode.parentNode.parentNode)" class="btn" style="color: #133356;">
-                                <i class="far fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    {% elif field.label == 'Article code' %}
-                        {{ field }}
-                        {{ formset.empty_form.article_id }}
-                        <div id="suggestions" class="sugdiv"></div>
-                        {% for error in field.errors %}
-                            <span style="color: red">*{{ error }}</span>
-                        {% endfor %}
-                    {% else %}
-                        {{ field }}
-                        {% for error in field.errors %}
-                            <span style="color: red">*{{ error }}</span>
-                        {% endfor %}
-                    {% endif %}
-                </td>
-              {% endfor %}
-          </tr>
-      </script>
-      <div class="table-responsive card mt-4 custom-card">
-          <div class="card-header card-header-secondary">
-              <p class="card-title lead" style="font-size: 26px; color: #133356;">Produits</p>
-          </div>
-          <table class="table card-header">
-              <tbody id="item-pimporteds">
-                  {% for error in formset.non_form_errors %}
-                      <span style="color: red">*{{ error }}</span>
-                  {% endfor %}
-                  {% for formss in formset %}
-                      {{ formss.management_form }}
-                      <tr id="pimporteds-{{ forloop.counter0 }}" class= hide_all>
-                          {{ formss.id }}
-                          <td></td>
-                          {% for field in formss.visible_fields %}
-                          
-                            {% if field.label == 'Article code' %}
-                            <td>
-                                {{ field.label}}
-                                {{ field }}
-                                {{ formss.article_id }}
+                <!-- FOURNISSEUR - LIEU DECHARGEMENT - TRANSITAIRE - CAMION -->
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="fournisseur">Fournisseur</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.fournisseur }}
+                                {{ form.fournisseur_id }}
                                 <div id="suggestions" class="sugdiv"></div>
-                                {% for error in field.errors %}
-                                    <span style="color: red">*{{ error }}</span>
-                                {% endfor %}
-                            </td>
-                            {% elif not field.label == 'Supprimer' %}
-                                <td>
-                                  {{ field.label}}
+                                {% if form.fournisseur.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.fournisseur.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="lieu_decharge">Lieu Déchargement</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.lieu_decharge }}
+                                {% if form.lieu_decharge.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.lieu_decharge.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="transitor">Transitaire</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.transitor }}
+                                {% if form.transitor.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.transitor.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="camion">Camion</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.camion }}
+                                {% if form.camion.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.camion.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- DATE ENTRE AU STOCK - DATE CALCUL DE COUT  -->
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="date_in_stock">Date Entré au Stock</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.date_in_stock }}
+                                {% if form.date_in_stock.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.date_in_stock.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="date_calc_cost">Date Calcul de Cout</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.date_calc_cost }}
+                                {% if form.date_calc_cost.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.date_calc_cost.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- TAUX DE CHANGE - MONTANT FACTURE - MONTANT FRET - CURRENCY FOREIGN -->
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="exchange_rate">Taux de Change</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.exchange_rate }}
+                                {% if form.exchange_rate.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.exchange_rate.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="facture_amount">Montant Facture</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.facture_amount }}
+                                {% if form.facture_amount.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.facture_amount.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="facture_fees">Montant Frais</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.facture_fees }}
+                                {% if form.facture_fees.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.facture_fees.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="facture_currency">Devise</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.facture_currency }}
+                                {% if form.facture_currency.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.facture_currency.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CONNAISSEMENT - MAGASINAGE - DOUANES ALGERIENNE - CURRENCY LOCAL -->
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="ladding_bill">Connaissement</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.ladding_bill }}
+                                {% if form.ladding_bill.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.ladding_bill.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="shopping">Magasinage</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.shopping }}
+                                {% if form.shopping.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.shopping.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="customs">Douanes Algérienne</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.customs }}
+                                {% if form.customs.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.customs.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="local_currency">Devise</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.local_currency }}
+                                {% if form.local_currency.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.local_currency.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- TCS - DAPS - DD  -->
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="tcs">TCS</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.tcs }}
+                                {% if form.tcs.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.tcs.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="daps">DAPS</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.daps }}
+                                {% if form.daps.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.daps.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="dd">DD</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.dd }}
+                                {% if form.dd.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.dd.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- HONORRAIRE DOUANES - TRANSPORT LOCAL - AUTRES FRAIS - SERUSTARIES -->
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="customs_honorary">Honorraire Douanes</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.customs_honorary }}
+                                {% if form.customs_honorary.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.customs_honorary.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="local_transport">Transport Local</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.local_transport }}
+                                {% if form.local_transport.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.local_transport.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="other_fees">Autres Frais</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.other_fees }}
+                                {% if form.other_fees.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.other_fees.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="surestaries">Serustaries</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.surestaries }}
+                                {% if form.surestaries.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.surestaries.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- OBSERVATION -->
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="form-outline">
+                        <label class="form-label mt-2 labelCustom" for="observation">Observation</label>
+                        {{ form.observation }}
+                        {% if form.observation.errors %}
+                            <div style="color: red;">
+                            {% for error in form.observation.errors %}
+                                *{{ error }}
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-0">
+        </div>
+        <div class="d-flex justify-content-center align-items-center form-group mb-2">
+            <button type="submit" class="btn btn-secondary btn-block customSaveButton">
+                {% if form.instance.pk %}Sauvegarder les modifications{% else %}Créer{% endif %}
+            </button>
+        </div>
+    </div>
+    <div id="detailProducts" class="row mt-3" style="width: 92vw; display: none;">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            {% with named_formsets.pimporteds as formset %}
+                {{ formset.management_form }}
+                <script type="text/html" id="pimporteds-template">
+                    <tr id="pimporteds-__prefix__" class= hide_all>
+                            {% for fields in formset.empty_form.hidden_fields %}
+                                {{ fields }}
+                            {% endfor %}
+                            {% for field in formset.empty_form.visible_fields %}
+                            
+                            <td>
+                                {% if field.label == 'Supprimer' %}
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button" onclick="deleteRow(this.parentNode.parentNode.parentNode)" class="btn" style="color: #133356;">
+                                            <i class="far fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                {% elif field.label == 'Article code' %}
+                                    {{ field }}
+                                    {{ formset.empty_form.article_id }}
+                                    <div id="suggestions" class="sugdiv"></div>
+                                    {% for error in field.errors %}
+                                        <span style="color: red">*{{ error }}</span>
+                                    {% endfor %}
+                                {% else %}
                                     {{ field }}
                                     {% for error in field.errors %}
                                         <span style="color: red">*{{ error }}</span>
                                     {% endfor %}
-                                </td>
-                            {% endif %}
-                          {% endfor %}
-                          {% if formss.instance.pk %}
-                            <td>
-                                <div class="d-flex justify-content-center">
-                                <button type="button" onclick="confirmPImportedDel('{{formss.instance.pk|escapejs}}')" class="btn" style="color: #133356;">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </div>
-                            </td>    
-                          {% else %}
-                            <td>
-                                <div class="d-flex justify-content-center">
-                                    <button type="button" onclick="deleteRow(this.parentNode.parentNode)" class="btn" style="color: #133356;">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                            </td>    
-                          {% endif %}
-                      </tr>
-                  {% endfor %}
-              </tbody>
-          </table>
-          <div class="d-flex justify-content-end align-items-center m-2">
-                <a href="#" id="add-pimporteds-button" class="btn btn-secondary add-pimporteds" style="background-color: #979ba3; border-color: #979ba3;" role="button"><i class="fas fa-plus"></i></a>
-          </div>
-      </div>    
-  {% endwith %}
-
-    <div class="d-flex justify-content-center align-items-center form-group m-4">
-        <button type="submit" class="btn btn-secondary btn-block customSaveButton">
-            {% if form.instance.pk %}Sauvegarder les modifications{% else %}Créer{% endif %}
-        </button>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </script>
+                <div class="table-responsive card mb-5 custom-card col-lg-12 col-md-12 col-sm-12">
+                    <div class="card-header card-header-secondary">
+                        <p class="card-title lead" style="font-size: 26px; color: #133356;">Produits</p>
+                    </div>
+                    <table class="table card-header">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10vw;">Code</th>
+                                    <th style="width: 10vw;">Désignation</th>
+                                    <th>Quantité</th>
+                                    <th>Prix EXW</th>
+                                    <th>TCS (%)</th>
+                                    <th>DD</th>
+                                    <th>DAPS</th>
+                                    <th>Palette</th>
+                                    <th>Répartition (%)</th>
+                                    <th style="text-align: center; width: 1vw;">X</th>
+                                </tr>
+                            </thead>
+                            <tbody id="item-pimporteds">
+                                {% for error in formset.non_form_errors %}
+                                    <span style="color: red">*{{ error }}</span>
+                                {% endfor %}
+                                {% for formss in formset %}
+                                    {{ formss.management_form }}
+                                    <tr id="pimporteds-{{ forloop.counter0 }}" class= hide_all>
+                                        {{ formss.id }}
+                                        {% for field in formss.visible_fields %}
+                                            {% if field.label == 'Article code' %}
+                                            <td>
+                                                {{ field }}
+                                                {{ formss.article_id }}
+                                                <div id="suggestions" class="sugdiv"></div>
+                                                {% for error in field.errors %}
+                                                    <span style="color: red">*{{ error }}</span>
+                                                {% endfor %}
+                                            </td>
+                                            {% elif not field.label == 'Supprimer' %}
+                                                <td>
+                                                    {{ field }}
+                                                    {% for error in field.errors %}
+                                                        <span style="color: red">*{{ error }}</span>
+                                                    {% endfor %}
+                                                </td>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if formss.instance.pk %}
+                                            <td>
+                                                <div class="d-flex justify-content-center">
+                                                <button type="button" onclick="confirmPImportedDel('{{formss.instance.pk|escapejs}}')" class="btn" style="color: #133356;">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                            </td>    
+                                        {% else %}
+                                            <td>
+                                                <div class="d-flex justify-content-center">
+                                                    <button type="button" onclick="deleteRow(this.parentNode.parentNode)" class="btn" style="color: #133356;">
+                                                        <i class="far fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </td>    
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                    <div class="d-flex justify-content-end align-items-center m-2">
+                            <a href="#" id="add-pimporteds-button" class="btn btn-secondary add-pimporteds" style="background-color: #979ba3; border-color: #979ba3;" role="button"><i class="fas fa-plus"></i></a>
+                    </div>
+                </div>    
+            {% endwith %}
+            <div class="d-flex justify-content-center align-items-center form-group m-4">
+                <button type="submit" class="btn btn-secondary btn-block customSaveButton">
+                    {% if form.instance.pk %}Sauvegarder les modifications{% else %}Créer{% endif %}
+                </button>
+            </div>
+        </div> 
     </div>
 </form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -574,9 +684,35 @@ Rapport
             border: 1px solid rgba(118, 118, 118, 0.3);
         }
     }
+    
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
 </style>
 
 <script>
+    document.getElementById('toggleButton').addEventListener('click', function() {
+        var button = document.getElementById('toggleButton');
+        var reportSection = document.getElementById('detailReport');
+        var productsSection = document.getElementById('detailProducts');
+
+        console.log(reportSection.style.display)
+        console.log(productsSection.style.display)
+        if (reportSection.style.display === 'none') {
+            reportSection.style.display = 'block';
+            productsSection.style.display = 'none';
+            button.textContent = 'Produits >';
+        } else {
+            reportSection.style.display = 'none';
+            productsSection.style.display = 'block';
+            button.textContent = '< Détails'; 
+        }
+    });
     const setValue = (e, selectedId) => {
         var suggestions = e.parentNode;
         var fieldIdInput = suggestions.previousElementSibling;
@@ -703,7 +839,7 @@ Rapport
             $('#id_pimporteds-TOTAL_FORMS').attr('value', count+1);
             $('.form-select').select2({theme: 'bootstrap-5', allowClear: true,});
             var newElement = $('#item-pimporteds').children().last()[0];
-            newElement.scrollIntoView({ behavior: 'smooth' });
+            // newElement.scrollIntoView({ behavior: 'smooth' });
             $(newElement).find('.search-input-td').keyup(function() {
                 var suggestions = $(this).siblings('#suggestions');
                 var searchInput = $(this);
@@ -739,24 +875,26 @@ Rapport
 
         $('form').submit(function (event) {
             event.preventDefault();
-            var selectedProducts = [];
-            $("[id^='id_pimporteds-'][id$='-article_id']").each(function() {
-                selectedProducts.push(this.value);
-            });
-            if(selectedProducts.length == 0){
-                swal({title: `Oops, Ce rapport ne contient aucun produit importé.!`,   
-                    text: `Veuillez insérer au moins un produit.`, confirmButtonColor: "#DD6B55",   
-                    confirmButtonText: "Ok", type: "warning", closeOnCancel: true });
-            }
-            else if(hasDuplicates(selectedProducts)){
-                swal({title: `Oops, Il y a des produits en double!`,   
-                    text: `Veuillez modifier votre saisie.`, confirmButtonColor: "#DD6B55",   
-                    confirmButtonText: "Ok", type: "warning", closeOnCancel: true });
-            }
-            else{
-                $('[disabled]').removeAttr('disabled');
-                this.submit(); 
-            }
+            $('[disabled]').removeAttr('disabled');
+            this.submit(); 
+            // var selectedProducts = [];
+            // $("[id^='id_pimporteds-'][id$='-article_id']").each(function() {
+            //     selectedProducts.push(this.value);
+            // });
+            // if(selectedProducts.length == 0){
+            //     swal({title: `Oops, Ce rapport ne contient aucun produit importé.!`,   
+            //         text: `Veuillez insérer au moins un produit.`, confirmButtonColor: "#DD6B55",   
+            //         confirmButtonText: "Ok", type: "warning", closeOnCancel: true });
+            // }
+            // else if(hasDuplicates(selectedProducts)){
+            //     swal({title: `Oops, Il y a des produits en double!`,   
+            //         text: `Veuillez modifier votre saisie.`, confirmButtonColor: "#DD6B55",   
+            //         confirmButtonText: "Ok", type: "warning", closeOnCancel: true });
+            // }
+            // else{
+            //     $('[disabled]').removeAttr('disabled');
+            //     this.submit(); 
+            // }
         });
     });
 </script>

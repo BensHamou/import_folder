@@ -13,11 +13,6 @@ urlpatterns = [
     path("transitors/delete-transitor/<int:id>", views.deleteTransitorView, name="delete_transitor"),
     path("transitors/edit-transitor/<int:id>", views.editTransitorView, name="edit_transitor"),
     path("transitors/create-transitor/", views.createTransitorView, name="create_transitor"),
-    
-    path('currencies/', views.listCurrencyView, name='currencies'),
-    path("currencies/delete-currency/<int:id>", views.deleteCurrencyView, name="delete_currency"),
-    path("currencies/edit-currency/<int:id>", views.editCurrencyView, name="edit_currency"),
-    path("currencies/create-currency/", views.createCurrencyView, name="create_currency"),
 
     path('reports/', ReportList.as_view(), name='list_report'),
     path('', ReportList.as_view(), name='list_report'),

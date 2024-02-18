@@ -25,3 +25,14 @@ class SiteFilter(django_filters.FilterSet):
     class Meta:
         model = Site
         fields = ['search']
+
+class CurrencyFilter(django_filters.FilterSet):
+
+    search = django_filters.CharFilter(method='filter_search', widget=forms.TextInput(attrs=getAttrs('search', 'Rechercher Devise..') ))
+
+    def filter_search(self, queryset, name, value):
+        return queryset.filter(Q(designation__icontains=value)).distinct()
+
+    class Meta:
+        model = Currency
+        fields = ['search']

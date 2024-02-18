@@ -32,6 +32,8 @@
                     <th>Désignation</th>
                     <th>Address</th>
                     <th>Préfixe</th>
+                    <th>Devise Locale</th>
+                    <th>Devise Étrangère</th>
                     <th style="width: 6vh;">Actions</th>
                     </tr>
                 </thead>
@@ -42,6 +44,8 @@
                         <td>{{ site.designation }}</td>
                         <td>{{ site.address }}</td>
                         <td>{{ site.prefix_site }}</td>
+                        <td>{{ site.default_local_currency }}</td>
+                        <td>{{ site.default_foreign_currency }}</td>
                         <td style="vertical-align: middle;">
                             <button type="button" onclick="window.location='{% url 'edit_site' site.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% endif %}'" class="btn" style="padding: 2px;"><i class="fas fa-edit" style="color: #45558A;"></i></button>
                             <button type="button" disabled onclick="confirmSiteDel('{{site.id|escapejs}}', '{{site|escapejs}}')" class="btn" style="color: #45558A; padding: 2px;"><i class="far fa-trash-alt"></i></button>

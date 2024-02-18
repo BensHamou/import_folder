@@ -1,4 +1,5 @@
 {% extends "main.html" %}
+{% load humanize %}
 
 {% block title %}
 Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/{{ report.date_in_stock|date:"y" }}
@@ -80,7 +81,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-3 col-form-label" style="color: #0C2858;">N° Facture 2</label>
                     <div class="col-sm-9">
                         <div class="form-control-plaintext text-detail">
-                            {{ report.n_facture2 }}
+                            {% if report.n_facture2 %}{{ report.n_facture2 }}{% else %}/{% endif %}
                         </div>
                     </div>
                 </div>
@@ -174,7 +175,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Taux de Change</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.exchange_rate }}
+                            {{ report.exchange_rate|intcomma }}
                         </div>
                     </div>
                 </div>
@@ -182,7 +183,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Montant Facture</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.facture_amount }} {{ report.facture_currency }}
+                            {{ report.facture_amount|intcomma }} {{ report.facture_currency }}
                         </div>
                     </div>
                 </div>
@@ -190,7 +191,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Montant Frais</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.facture_fees }} {{ report.facture_currency }}
+                            {{ report.facture_fees|intcomma }} {{ report.facture_currency }}
                         </div>
                     </div>
                 </div>
@@ -198,15 +199,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Connaissement</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.ladding_bill }} {{ report.local_currency }}
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row mb-1">
-                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Connaissement</label>
-                    <div class="col-sm-7">
-                        <div class="form-control-plaintext text-detail monetary">
-                            {{ report.ladding_bill }} {{ report.local_currency }}
+                            {{ report.ladding_bill|intcomma }} {{ report.local_currency }}
                         </div>
                     </div>
                 </div>
@@ -214,7 +207,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Magasinage</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.shopping }} {{ report.local_currency }}
+                            {{ report.shopping|intcomma }} {{ report.local_currency }}
                         </div>
                     </div>
                 </div>
@@ -222,7 +215,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Douanes Algérienne</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.customs }} {{ report.local_currency }}
+                            {{ report.customs|intcomma }} {{ report.local_currency }}
                         </div>
                     </div>
                 </div>
@@ -230,7 +223,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">TCS</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.tcs }} {{ report.local_currency }}
+                            {% if report.tcs %}{{ report.tcs|intcomma }} {{ report.local_currency }}{% else %}/{% endif %}
                         </div>
                     </div>
                 </div>
@@ -238,7 +231,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">DAPS</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.daps }} {{ report.local_currency }}
+                            {% if report.daps %}{{ report.daps|intcomma }} {{ report.local_currency }}{% else %}/{% endif %}
                         </div>
                     </div>
                 </div>
@@ -246,7 +239,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">DD</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.dd }} {{ report.local_currency }}
+                            {% if report.dd %}{{ report.dd|intcomma }} {{ report.local_currency }}{% else %}/{% endif %}
                         </div>
                     </div>
                 </div>
@@ -254,7 +247,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Honorraire Douanes</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.customs_honorary }} {{ report.local_currency }}
+                            {{ report.customs_honorary|intcomma }} {{ report.local_currency }}
                         </div>
                     </div>
                 </div>
@@ -262,7 +255,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Trabsort Locale</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.local_transport }} {{ report.local_currency }}
+                            {{ report.local_transport|intcomma }} {{ report.local_currency }}
                         </div>
                     </div>
                 </div>
@@ -270,7 +263,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Autres Frais</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.other_fees }} {{ report.local_currency }}
+                            {{ report.other_fees|intcomma }} {{ report.local_currency }}
                         </div>
                     </div>
                 </div>
@@ -278,7 +271,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Surestaries</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.surestaries }} {{ report.local_currency }}
+                            {{ report.surestaries|intcomma }} {{ report.local_currency }}
                         </div>
                     </div>
                 </div>
@@ -286,7 +279,7 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Total Dossier</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.total }} {{ report.local_currency }}
+                            {{ report.total|intcomma }} {{ report.local_currency }}
                         </div>
                     </div>
                 </div>
@@ -343,61 +336,61 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                         <td>
                             <div>
                                 <p class="tdLabel">Frais</p>
-                                <p class="valueLead mb-0">{% if pimported.fret > 0 %}{{ pimported.fret }} {{ pimported.foreign_currency }}{% else %}/{% endif %}</p>
+                                <p class="valueLead mb-0">{% if pimported.fret > 0 %}{{ pimported.fret|intcomma }} {{ pimported.foreign_currency }}{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">DZD</p>
-                                <p class="valueLead mb-0">{% if pimported.dzd > 0 %}{{ pimported.dzd }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
+                                <p class="valueLead mb-0">{% if pimported.dzd > 0 %}{{ pimported.dzd|intcomma }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">TCS</p>
-                                <p class="valueLead mb-0">{{ pimported.tcs }}%</p>
+                                <p class="valueLead mb-0">{% if pimported.tcs > 0 %}{{ pimported.tcs }}%{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">Montant TCS</p>
-                                <p class="valueLead mb-0">{{ pimported.mnt_tcs }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_tcs|intcomma }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">DD</p>
-                                <p class="valueLead mb-0">{{ pimported.dd }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{% if pimported.dd > 0 %}{{ pimported.dd|intcomma }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">Montant DD</p>
-                                <p class="valueLead mb-0">{{ pimported.mnt_dd }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_dd|intcomma }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">DAPS</p>
-                                <p class="valueLead mb-0">{{ pimported.daps }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{% if pimported.daps > 0 %}{{ pimported.daps|intcomma }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">Montant DAPS</p>
-                                <p class="valueLead mb-0">{{ pimported.mnt_daps }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_daps|intcomma }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">Montant Divers</p>
-                                <p class="valueLead mb-0">{{ pimported.mnt_diver }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_diver|intcomma }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">Total</p>
-                                <p class="valueLead mb-0">{{ pimported.total }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.total|intcomma }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>
@@ -473,20 +466,20 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <td>
                         <div>
                             <p class="tdLabel">Frais Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_fret}} {{report.facture_currency}}</p>
+                            <p class="valueLead mb-0">{{report.total_products_fret|intcomma}} {{report.facture_currency}}</p>
                         </div>
                     </td>
                     <td>
                         <div>
                             <p class="tdLabel">DZD Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_dzd}} {{report.local_currency}}</p>
+                            <p class="valueLead mb-0">{{report.total_products_dzd|intcomma}} {{report.local_currency}}</p>
                         </div>
                     </td>
                     <td></td>
                     <td>
                         <div>
                             <p class="tdLabel">Montant TCS Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_mnt_tcs}} {{report.local_currency}}</p>
+                            <p class="valueLead mb-0">{{report.total_products_mnt_tcs|intcomma}} {{report.local_currency}}</p>
                         </div>
                     </td>
                     <td></td>
@@ -494,26 +487,26 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                     <td>
                         <div>
                             <p class="tdLabel">Montant DD Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_mnt_dd}} {{report.local_currency}}</p>
+                            <p class="valueLead mb-0">{{report.total_products_mnt_dd|intcomma}} {{report.local_currency}}</p>
                         </div>
                     </td>
                     <td></td>
                     <td>
                         <div>
                             <p class="tdLabel">Montant DAPS Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_mnt_daps}} {{report.local_currency}}</p>
+                            <p class="valueLead mb-0">{{report.total_products_mnt_daps|intcomma}} {{report.local_currency}}</p>
                         </div>
                     </td>
                     <td>
                         <div>
                             <p class="tdLabel">Montant Divers Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_mnt_diver}} {{report.local_currency}}</p>
+                            <p class="valueLead mb-0">{{report.total_products_mnt_diver|intcomma}} {{report.local_currency}}</p>
                         </div>
                     </td>
                     <td>
                         <div>
                             <p class="tdLabel">Montant Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_total}} {{report.local_currency}}</p>
+                            <p class="valueLead mb-0">{{report.total_products_total|intcomma}} {{report.local_currency}}</p>
                         </div>
                     </td>
                     <td></td>

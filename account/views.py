@@ -130,7 +130,6 @@ def userDetailsView(request, id):
     }
     return render(request, 'user_details.html', context)
 
-
 # AUTHENTIFICATION
 
 class CustomLoginView(LoginView):
@@ -145,8 +144,6 @@ class CustomLoginView(LoginView):
 def logoutView(request):
     logout(request)
     return redirect('login')
-
-
 
 # SITES
 
@@ -212,4 +209,60 @@ def editSiteView(request, id):
 
     context = {'form': form, 'site': site}
     return render(request, 'site_form.html', context)
+
+# Currency
+@login_required(login_url='login')
+@admin_required
+def listCurrencyView(request):
+    currencies = Currency.objects.all().order_by('id')
+    filteredData = CurrencyFilter(request.GET, queryset=currencies)
+    currencies = filteredData.qs
+    paginator = Paginator(currencies, 7)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    context = {'page': page, 'filtredData': filteredData}
+    return render(request, 'list_currencies.html', context)
+
+@login_required(login_url='login')
+@admin_required
+def deleteCurrencyView(request, id):
+    currency = Currency.objects.get(id=id)
+    currency.delete()
+    cache_param = str(uuid.uuid4())
+    url_path = reverse('currencies')
+    redirect_url = f'{url_path}?cache={cache_param}'
+    return redirect(redirect_url)
+
+@login_required(login_url='login')
+@admin_required
+def createCurrencyView(request):
+    form = CurrencyForm()
+    if request.method == 'POST':
+        form = CurrencyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            cache_param = str(uuid.uuid4())
+            url_path = reverse('currencies')
+            redirect_url = f'{url_path}?cache={cache_param}'
+            return redirect(redirect_url)
+    context = {'form': form}
+    return render(request, 'currency_form.html', context)
+
+@login_required(login_url='login')
+@admin_required
+def editCurrencyView(request, id):
+    currency = Currency.objects.get(id=id)
+    form = CurrencyForm(instance=currency)
+    if request.method == 'POST':
+        form = CurrencyForm(request.POST, instance=currency)
+        if form.is_valid():
+            form.save()
+            cache_param = str(uuid.uuid4())
+            url_path = reverse('currencies')
+            page = request.GET.get('page', '1')
+            redirect_url = f'{url_path}?cache={cache_param}&page={page}'
+            return redirect(redirect_url)
+    context = {'form': form, 'currency': currency}
+
+    return render(request, 'currency_form.html', context)
 
