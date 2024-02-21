@@ -103,9 +103,11 @@ class ReportForm(ModelForm):
         super(ReportForm, self).__init__(*args, **kwargs)
         if sites is not None:
             self.fields['site'].queryset = sites
-            self.fields['site'].initial = sites.first()
-            self.fields['facture_currency'].initial = sites.first().default_foreign_currency
-            self.fields['local_currency'].initial = sites.first().default_local_currency
+            site = sites.first()
+            if site:
+                self.fields['site'].initial = site
+                self.fields['facture_currency'].initial = site.default_foreign_currency
+                self.fields['local_currency'].initial = site.default_local_currency
             if not admin and len(sites) < 2:
                 self.fields['site'].widget.attrs['disabled'] = True
     

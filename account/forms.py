@@ -37,7 +37,8 @@ class SiteForm(ModelForm):
     default_foreign_currency = forms.ModelChoiceField(queryset=Currency.objects.all(), widget=forms.Select(attrs= getAttrs('select')), empty_label="Devise Étrangère Par Défault")
 
 class CustomLoginForm(AuthenticationForm):
-    username = forms.CharField( label="Email / AD 2000", widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control', 'placeholder':'Email'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder':'Mot de passe', 'style':'height: 45px; color: black;'}))
+    style = 'height: 45px; color: black; border: none; border-bottom: 1px solid black;'
+    username = forms.CharField( label="Email / AD 2000", widget=forms.TextInput(attrs={'autofocus': True, 'style': style, 'class': 'form-control', 'placeholder':'Adresse e-mail'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder':'Mot de passe', 'style': style}))
  
  

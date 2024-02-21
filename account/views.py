@@ -51,14 +51,17 @@ def refreshUsersList(request):
     usernames = User.objects.values_list('username', flat=True)
     
     API_Users = 'https://api.ldap.groupe-hasnaoui.com/get/users?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJUb2tlbiI6IkZvciBEU0kiLCJVc2VybmFtZSI6ImFjaG91cl9hciJ9.aMy1LUzKa6StDvQUX54pIvmjRwu85Fd88o-ldQhyWnE'
-    GROUP_Users = 'https://api.ldap.groupe-hasnaoui.com/get/users/group/PUMA-TRN?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJUb2tlbiI6IkZvciBEU0kiLCJVc2VybmFtZSI6ImFjaG91cl9hciJ9.aMy1LUzKa6StDvQUX54pIvmjRwu85Fd88o-ldQhyWnE'
+    GROUP_Users = 'https://api.ldap.groupe-hasnaoui.com/get/users/group/PUMA-IMFD?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJUb2tlbiI6IkZvciBEU0kiLCJVc2VybmFtZSI6ImFjaG91cl9hciJ9.aMy1LUzKa6StDvQUX54pIvmjRwu85Fd88o-ldQhyWnE'
 
     response = requests.get(API_Users)
+
     response_ = requests.get(GROUP_Users)
 
     if response.status_code == 200 and response_.status_code == 200:
         data = json.loads(response.content)
         group_users = json.loads(response_.content)['members']
+
+        print(group_users)
 
         new_users_list = [user for user in data['users'] if user['fullname'] in group_users and user['AD2000'] not in usernames]
 

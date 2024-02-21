@@ -20,7 +20,7 @@ class ApiBackend(BaseBackend):
             
             auth = HTTPBasicAuth(user.email, password)
 
-            response = requests.post('https://api.ldap.groupe-hasnaoui.com/pumatrn/auth', auth=auth)
+            response = requests.post('https://api.ldap.groupe-hasnaoui.com/pumaimport/auth', auth=auth)
 
             if not response.status_code == 200:
                 messages.error(request, "Problème avec la connexion au serveur.")

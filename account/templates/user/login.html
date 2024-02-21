@@ -1,52 +1,68 @@
 {% extends 'main.html' %}
 {% load widget_tweaks %}
 
-{% block title %}PUMA Labs{% endblock %}
+{% block title %}Dossier Importation{% endblock %}
 {% load static %} 
 {% block login %}
-<div class="d-flex justify-content-center align-items-center" style="height: 100%;">
-  <div class="card" style="background: rgba(69, 85, 138, 0.75); backdrop-filter: blur(30px); border-radius: 1rem; border-color: transparent; width: 90%">
-    <div class="row">
-      <div class="col-md-6 d-none d-md-block">
-        <img src="{% static 'img/login_logo.png' %}" alt="login form" class="img-fluid" style="margin: 15% 0;" />
+<div class="p-5" style="height: 100vh; background: rgb(20,30,48); background: linear-gradient(90deg, rgba(20,30,48,1) 0%, rgba(32,52,76,1) 100%);">
+  <div class="row">
+    <div class="col-lg-5 col-md-5 col-sm-0 m-0 p-0" style="background-image: url('{% static 'img/left_login.png' %}'); background-size: cover; background-position: center;">
+    </div>
+    <div class="col-lg-7 col-md-7 col-sm-12 m-0 p-0" style="background: white; display: flex; flex-direction: column; height: 90vh;">
+      <div class="row mt-5 p-0 justify-content-center align-items-center">
+          <img src="{% static 'img/header_login.png' %}" alt="login form" class="img-fluid" style="width: 280px; height: auto"/>
       </div>
-      <div class="col-md-4 d-flex justify-content-center align-items-center" style="margin: auto">
-        <div class="card-body text-white">
-          <form method="POST">
-            {% csrf_token %}
-            <h5 class="fw-normal mb-3 ml-3 pb-3" style="letter-spacing: 1px;">Connectez-vous à votre compte</h5>
-            <div class="form-outline mb-4">
-                <label class="form-label">Email / AD 2000</label>
-                {{ form.username }}
+      <div class="row justify-content-center align-items-center flex-grow-1">
+          <div class="col-lg-10 col-md-10 col-sm-10">
+            <div class="card-body p-5">
+              <form method="POST">
+                  {% csrf_token %}
+                  <h1 class="fw-normal m-0" style="color: #1b1a46">Bienvenue</h1>
+                  <h5 class="fw-normal" style="letter-spacing: 1px;">Se connecter a votre compte</h5>
+                  <div class="form-outline mb-4">
+                      {{ form.username }}
+                  </div>
+                  <div class="form-outline mb-4">
+                    <div class="input-group">
+                      {{ form.password|attr:"id:password" }}
+                      <span class="input-group-text" style="background: transparent; border: none; border-bottom: 1px solid black;">
+                        <i class="fas fa-eye-slash" onClick="togglePass()" id="togglePassword"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-end pt-1 mb-4">
+                    <button class="btn btn-block" type="submit" style="color: #1b1a46; border: none; background-color: #f3f1f1;">
+                      <h5 class="font-weight-bold">Se connecter</h5>
+                    </button>
+                  </div>
+                  {% if messages %}
+                    <div class="alert alert-danger">
+                        <strong style="font-weight: normal;">Erreur:</strong>
+                        <ul>
+                          {% for message in messages %}
+                            {{ message }}
+                          {% endfor %}
+                        </ul>
+                    </div>
+                  {% endif %}
+              </form>
             </div>
-            <div class="form-outline mb-4">
-              <label class="form-label">Mot de passe</label>
-              <div class="input-group">
-                {{ form.password|attr:"id:password" }}
-                <span class="input-group-text">
-                  <i class="fas fa-eye-slash" onClick="togglePass()" id="togglePassword"></i>
-                </span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center justify-content-center pt-1 mb-4">
-              <button class="btn btn-lg btn-block customSaveButton" type="submit" style="color: white">Se connecter</button>
-            </div>
-            {% if messages %}
-              <div class="alert alert-danger">
-                  <strong style="font-weight: normal;">Erreur:</strong>
-                  <ul>
-                    {% for message in messages %}
-                      {{ message }}
-                    {% endfor %}
-                  </ul>
-              </div>
-            {% endif %}
-          </form>
-        </div>
+          </div>
+      </div>
+      <div class="row d-flex justify-content-center align-items-center text-center">
+          <img src="{% static 'img/footer_login.png' %}" alt="login form" class="img-fluid" style="width: 200px; height: auto;"/>
       </div>
     </div>
   </div>
 </div>
+
+{% block style %}
+  *{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+  }
+{% endblock %}
+
 
 <script>
   const togglePass = () => {
