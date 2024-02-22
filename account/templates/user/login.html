@@ -35,12 +35,14 @@
                       <h5 class="font-weight-bold">Se connecter</h5>
                     </button>
                   </div>
-                  {% if messages %}
+                  {% if messages|is_login %}
                     <div class="alert alert-danger">
                         <strong style="font-weight: normal;">Erreur:</strong>
                         <ul>
                           {% for message in messages %}
-                            {{ message }}
+                            {% if message|startwith:'LOGIN : ' %}
+                              <li>{{ message|loginerror:'LOGIN : ' }}</li>
+                            {% endif %}
                           {% endfor %}
                         </ul>
                     </div>

@@ -2,7 +2,7 @@
 {% load humanize %}
 
 {% block title %}
-Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/{{ report.date_in_stock|date:"y" }}
+Rapport - {{ report.ref_folder }}
 {% endblock %}
 {% load static %} 
 {% block activeListReport %} {% include 'active_bar.html' %} {% endblock %}
@@ -62,10 +62,10 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
         <div class="card custom-card">
             <div class="card-body p-3">
                 <div class="form-group row mb-1">
-                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">N° Rapport</label>
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">N° de dossier</label>
                     <div class="col-sm-9">
                         <div class="form-control-plaintext text-detail">
-                            {{ report.site.prefix_site }}{{ report.n_report|stringformat:"04d" }}/{{ report.date_in_stock|date:"y" }}
+                            {{ report.ref_folder }}
                         </div>
                     </div>
                 </div>
@@ -101,14 +101,14 @@ Rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/
                         </div>
                     </div>
                 </div>
-                <div class="form-group row mb-1">
+                {% comment %} <div class="form-group row mb-1">
                     <label class="col-sm-3 col-form-label" style="color: #0C2858;">Site</label>
                     <div class="col-sm-9">
                         <div class="form-control-plaintext text-detail">
                             {{ report.site }}
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
                 <div class="form-group row mb-1">
                     <label class="col-sm-3 col-form-label" style="color: #0C2858;">Fournisseur</label>
                     <div class="col-sm-9">

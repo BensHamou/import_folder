@@ -55,12 +55,14 @@ class TransitorForm(ModelForm):
 class ReportForm(ModelForm):
     class Meta:
         model = Report
-        fields = ['n_report', 'site', 'fournisseur', 'fournisseur_id', 'n_facture', 'lieu_decharge', 'transitor', 'n_facture2', 
+        fields = ['ref_folder', 'site', 'fournisseur', 'fournisseur_id', 'n_facture', 'lieu_decharge', 'transitor', 'n_facture2', 
                   'camion', 'date_in_stock', 'date_calc_cost', 'exchange_rate', 'facture_amount', 'facture_fees', 'facture_currency', 
                   'ladding_bill', 'shopping', 'customs', 'tcs', 'daps', 'dd', 'customs_honorary', 'local_transport', 'other_fees', 'surestaries'
                   , 'local_currency', 'observation']
 
-    n_report = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','N° Rapport')))
+    # n_report = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','N° Rapport')))
+    ref_folder = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq','N° de dossier')))
+
     site = forms.ModelChoiceField(queryset=Site.objects.all(), widget=forms.Select(attrs= getAttrs('select2')), empty_label="Site")
 
     fournisseur = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchReq','Fournisseur')))
@@ -111,22 +113,22 @@ class ReportForm(ModelForm):
             if not admin and len(sites) < 2:
                 self.fields['site'].widget.attrs['disabled'] = True
     
-    def clean(self):
-        cleaned_data = super().clean()
-        n_report = cleaned_data.get('n_report')
-        site = cleaned_data.get('site')
-        date_in_stock = cleaned_data.get('date_in_stock')
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     n_report = cleaned_data.get('n_report')
+    #     site = cleaned_data.get('site')
+    #     date_in_stock = cleaned_data.get('date_in_stock')
 
-        if n_report and n_report != 0 and site:
-            if self.instance.pk:
-                existing_report = Report.objects.filter(n_report=n_report, site=site, date_in_stock__year=date_in_stock.year).exclude( Q(id=self.instance.pk) | Q(state='Annulé')).exists()
-            else:
-                existing_report = Report.objects.filter(n_report=n_report, site=site, date_in_stock__year=date_in_stock.year).exclude(state='Annulé').exists()
-            if n_report and n_report != 0 and site:
-                if existing_report:
-                    self.add_error('n_report', 'Un rapport avec ce numéro existe déjà pour ce site.')
+    #     if n_report and n_report != 0 and site:
+    #         if self.instance.pk:
+    #             existing_report = Report.objects.filter(n_report=n_report, site=site, date_in_stock__year=date_in_stock.year).exclude( Q(id=self.instance.pk) | Q(state='Annulé')).exists()
+    #         else:
+    #             existing_report = Report.objects.filter(n_report=n_report, site=site, date_in_stock__year=date_in_stock.year).exclude(state='Annulé').exists()
+    #         if n_report and n_report != 0 and site:
+    #             if existing_report:
+    #                 self.add_error('n_report', 'Un rapport avec ce numéro existe déjà pour ce site.')
 
-        return cleaned_data
+    #     return cleaned_data
     
 class PImportedForm(ModelForm):
     class Meta:

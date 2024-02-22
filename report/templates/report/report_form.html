@@ -14,7 +14,7 @@ Rapport
     <p class="lead m-0 p-0" style="color: #133356;">retour</p>
 </a>
 </div>
-<h4 class="mb-4" style="color: #133356;">{% if report %}Modification du rapport - {{ report.site.prefix_site }}{{ report.n_report|stringformat:"05d" }}/{{ report.date_in_stock|date:"y" }}{% else %}Création d'un rapport{% endif %}</h4>
+<h4 class="mb-4" style="color: #133356;">{% if report %}Modification du rapport - {{ report.ref_folder }}{% else %}Création d'un rapport{% endif %}</h4>
 <button id="toggleButton" type="button" class="btn btn-secondary">Produits ></button>
 <form class="container m-0 p-0" method="POST" id="report_form" style="width: 100%">
     {% csrf_token %}
@@ -24,7 +24,7 @@ Rapport
     <div id="detailReport"  class="row mt-3" style="width: 92vw;">
         <div class="card card-body mb-5 custom-card col-lg-5 col-md-5 col-sm-12">
             <div class="row mb-4">
-                <!-- SITE - N RAPPORT - N Facture - N Facture 2 -->
+                <!-- SITE - N° de dossier - N Facture - N Facture 2 -->
                 <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label labelCustom" for="site">Site</label>
@@ -44,13 +44,13 @@ Rapport
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="form-group row">
-                        <label class="col-sm-4 col-form-label labelCustom" for="n_report">N° Rapport</label>
+                        <label class="col-sm-4 col-form-label labelCustom" for="ref_folder">N° de dossier</label>
                         <div class="col-sm-8">
                             <div class="form-outline">
-                                {{ form.n_report }}
-                                {% if form.n_report.errors %}
+                                {{ form.ref_folder }}
+                                {% if form.ref_folder.errors %}
                                     <div style="color: red;">
-                                        {% for error in form.n_report.errors %}
+                                        {% for error in form.ref_folder.errors %}
                                             *{{ error }}
                                         {% endfor %}
                                     </div>

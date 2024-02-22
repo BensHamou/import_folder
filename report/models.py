@@ -45,7 +45,8 @@ class Report(models.Model):
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True)
 
-    n_report = models.IntegerField()
+    n_report = models.IntegerField(blank=True, null=True)
+    ref_folder = models.CharField(max_length=150)
 
     fournisseur_id = models.IntegerField()
     fournisseur = models.CharField(max_length=255)

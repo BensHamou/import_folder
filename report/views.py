@@ -17,7 +17,28 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from functools import wraps
 from .utils import *
+from django.core.mail import send_mail
+from django.utils.html import format_html
+from django.template.defaulttags import register
 
+@register.filter
+def startwith(value, word):
+    return str(value).startswith(word)
+
+@register.filter
+def is_login(messages):
+    for message in messages:
+        if str(message).startswith('LOGIN : '):
+            return True
+    return False
+
+@register.filter
+def loginerror(value, word):
+    return str(value)[len(word):]
+
+@register.filter
+def startswith(value, arg):
+    return value.startswith(arg)
 
 def check_creator(view_func):
     @wraps(view_func)
@@ -350,8 +371,24 @@ def confirmReport(request, pk):
     
     if report.state != 'Confirmé':
         report.state = 'Confirmé'
-        report.save()
+        #report.save()
+
+    subject = 'Rapport de dossier d\'importation ' + '[' + str(report.id) + ']'
+    address = 'http://10.10.10.53:8022/report/'
+    message = '''
+            <p>Bonjour l'équipe,</p>
+            <p>Un rapport a été créé par <b style="color: #002060">''' + report.creator.fullname
+            
+    message += '''<p>Pour plus de détails, veuillez visiter <a href="''' + address + str(report.id) +'''/">''' + address + str(report.id) +'''/</a>.</p>'''
+    formatHtml = format_html(message)
     
+    if report.site.address:
+        recipient_list = report.site.address.split('&')
+    else:
+        recipient_list = ['benshamou@gmail.com'] 
+
+    messages.success(request, 'Rapport validé avec succès')
+    send_mail(subject, "", 'pumafimport@outlook.com', recipient_list, html_message=formatHtml)
     url_path = reverse('view_report', args=[report.id])
     cache_param = str(uuid.uuid4())
     redirect_url = f'{url_path}?cache={cache_param}'
