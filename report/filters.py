@@ -27,6 +27,17 @@ class TransitorFilter(FilterSet):
         model = Transitor
         fields = ['search']
 
+class BudgetCostFilter(FilterSet):
+
+    search = CharFilter(method='filter_search', widget=forms.TextInput(attrs=getAttrs('search', 'Rechercher Coût Budgetaire..') ))
+
+    def filter_search(self, queryset, name, value):
+        return queryset.filter(Q(article_code__icontains=value) | Q(article_designation__icontains=value)).distinct()
+
+    class Meta:
+        model = Transitor
+        fields = ['search']
+
 class ReportFilter(FilterSet):
 
     other = {'style': 'background-color: rgba(202, 207, 215, 0.5); box-shadow: 0 0 6px rgba(0, 0, 0, 0.2); color: #45558a; height: 40px; border-radius: 5px;'}

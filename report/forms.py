@@ -52,6 +52,31 @@ class TransitorForm(ModelForm):
 
     designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Désignation')))
 
+class BudgetCostForm(ModelForm):
+    class Meta:
+        model = BudgetCost
+        fields = ['article_id', 'article_code', 'article_designation', 'budget']
+
+    min = {'min': '0', 'step': '0.001'}
+
+    article_code = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchReq','Code')))
+    article_designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq','Designation', {'disabled': 'disabled'})))
+    article_id = forms.IntegerField(widget=forms.HiddenInput(attrs=getAttrs('controlIDReq','ID_article_id')))
+    budget = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Budget', min)))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        article_code = cleaned_data.get('article_code')
+
+        if article_code:
+            if self.instance.pk:
+                existing_budget = BudgetCost.objects.filter(article_code=article_code).exclude( Q(id=self.instance.pk)).first()
+            else:
+                existing_budget = BudgetCost.objects.filter(article_code=article_code).first()
+            if existing_budget:
+                self.add_error('article_code', f'Un coût budgutaire pour ce produit existe déjà. (id = {existing_budget.id})')
+        return cleaned_data
+
 class ReportForm(ModelForm):
     class Meta:
         model = Report
@@ -127,7 +152,6 @@ class ReportForm(ModelForm):
     #         if n_report and n_report != 0 and site:
     #             if existing_report:
     #                 self.add_error('n_report', 'Un rapport avec ce numéro existe déjà pour ce site.')
-
     #     return cleaned_data
     
 class PImportedForm(ModelForm):

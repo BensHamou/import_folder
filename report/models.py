@@ -30,6 +30,19 @@ class Transitor(models.Model):
 
     def __str__(self):
         return self.designation
+    
+class BudgetCost(models.Model):
+
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+
+    article_id = models.IntegerField(blank=True, null=True)
+    article_code = models.CharField(max_length=255, blank=True, null=True)
+    article_designation = models.CharField(max_length=255, blank=True, null=True)
+    budget = models.FloatField(default=0, validators=[MinValueValidator(0)])
+
+    def __str__(self):
+        return f'[{self.article_code}] {self.article_designation} - {self.budget}'
 
 class Report(models.Model):
  
@@ -134,7 +147,7 @@ class Report(models.Model):
         return self.pimported_set.all()
     
     def __str__(self):
-        return str(self.n_report) + " (" + str(self.date_created) +")"
+        return str(self.ref_folder) + " (" + str(self.date_created) +")"
     
 class PImported(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)

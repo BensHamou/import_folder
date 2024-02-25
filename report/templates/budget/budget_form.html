@@ -1,0 +1,175 @@
+{% extends "main.html" %}
+
+{% block title %}
+Coût Budgetaire
+{% endblock %}
+{% load static %} 
+{% block activeSettings %} {% include 'active_bar.html' %} {% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-left mb-3">
+  <a href="{% url 'budgets' %}{% if request.GET.page %}?page={{ request.GET.page }}{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="text-decoration-none text-white d-flex align-items-center" style="color: rgba(222, 226, 230, 0.8); letter-spacing: 1.2px;">
+      <i class="fas fa-caret-left me-2  retourC"></i>
+    <p class="lead m-0 p-0 retourC">retour</p>
+</a>
+</div>
+<h4 class="mb-4 retourC">{% if budget %}Modification du budget de [{{ budget.article_code }}] {{ budget.article_designation }}{% else %}Création d'un coût budgetaire{% endif %}</h4>
+
+<form method="POST">
+  {% csrf_token %}
+  <div class="card card-body custom-card">
+    <div class="row mb-4">
+      <div class="col-lg-3 col-md-12 col-sm-12">
+        <div class="form-outline">
+            <label class="form-label labelCustom" for="article_code">Code</label>
+            {{ form.article_code }}
+            {{ form.article_id }}
+            <div id="suggestions" class="sugdiv"></div>
+            {% if form.article_code.errors %}
+                <div style="color: red;">
+                    {% for error in form.article_code.errors %}
+                        *{{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="form-outline">
+            <label class="form-label labelCustom" for="article_designation">Description</label>
+            {{ form.article_designation }}
+            {% if form.article_designation.errors %}
+                <div style="color: red;">
+                    {% for error in form.article_designation.errors %}
+                        *{{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-12 col-sm-12">
+        <div class="form-outline">
+            <label class="form-label labelCustom" for="article_designation">Budget</label>
+            {{ form.budget }}
+            {% if form.budget.errors %}
+                <div style="color: red;">
+                    {% for error in form.budget.errors %}
+                        *{{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="float-end mt-4">
+    <input type='submit' class="btn btn-secondary customSaveButton" name='save' value="Sauvgardez"/>
+  </div>
+</form>
+<style>
+  #suggestions {
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    max-height: 200px;
+    overflow-y: scroll;
+    display: none;
+    border-radius: 0 0 10px 10px;
+  }
+  
+  .suggestion {
+    padding: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .suggestion:hover {
+    background-color: #eee;
+  }
+  
+  #suggestions.loading {
+    background-color: #f2f2f2;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  #suggestions.loading .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-top: 2px solid #333;
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+  }
+  
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+      -moz-appearance: textfield;
+  }
+</style>
+
+<script>
+  
+  const setValue = (e, selectedId, selectedName) => {
+    var suggestions = e.parentNode;
+    const codeField = document.getElementById('id_article_code');
+    const designationField = document.getElementById('id_article_designation');
+    const articleIdField = document.getElementById('id_article_id');
+    if (codeField && designationField && articleIdField) {
+      codeField.value = e.innerHTML;
+      designationField.value = selectedName;
+      articleIdField.value = selectedId;
+      suggestions.innerHTML = '';
+      suggestions.style.display = 'none';
+    }
+  };
+
+  $(document).ready(function() {
+    $('form').submit(function (event) {
+      event.preventDefault();
+      $('[disabled]').removeAttr('disabled');
+      this.submit(); 
+    });
+    $('.search-input').keyup(function() {
+      var suggestions = $(this).siblings('#suggestions');
+      var searchInput = $(this);
+      var searchInputID = $(this).siblings('.search-input-id');
+      searchInputID.val('');
+      if (searchInput.val()) {
+          suggestions.addClass('loading');
+          $.ajax({url: '{% url "live_search" %}', type: 'GET', data: { 'search_term': searchInput.val(), 'search_for': searchInput.attr('name') }, dataType: 'json',
+              success: function(response) {
+                console.log(response)
+                  var suggestionsHTML = '';
+                  if (response.length > 0) {
+                      for (var i = 0; i < response.length; i++) {
+                          var result = response[i];
+                          suggestionsHTML += `<div class="suggestion" onClick="setValue(this, ${result.id}, '${result.name}')">${result.code}</div>`;
+                      }
+                      suggestions.html(suggestionsHTML);
+                      suggestions.removeClass('loading');
+                      suggestions.show();
+                  } else {
+                      suggestionsHTML = '<p>Aucune suggestion trouvée</p>';
+                      suggestions.html(suggestionsHTML);
+                      suggestions.removeClass('loading');
+                      suggestions.show();
+                  }
+              }
+      });
+      } else {
+          suggestions.empty();
+          suggestions.hide();
+      }
+    });
+  });
+</script>
+{% endblock %}

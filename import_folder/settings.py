@@ -57,7 +57,7 @@ TEMPLATES = [
         "DIRS": [os.path.join(BASE_DIR, 'account', 'templates', 'user'), os.path.join(BASE_DIR, 'account', 'templates', 'fragment'), 
                  os.path.join(BASE_DIR, 'account', 'templates', 'site'), os.path.join(BASE_DIR, 'account', 'templates', 'currency'),
                  os.path.join(BASE_DIR, 'report', 'templates', 'report'), os.path.join(BASE_DIR, 'report', 'templates', 'emplacement'),
-                 os.path.join(BASE_DIR, 'report', 'templates', 'transitor')
+                 os.path.join(BASE_DIR, 'report', 'templates', 'transitor'), os.path.join(BASE_DIR, 'report', 'templates', 'budget')
                  ],        
         "APP_DIRS": True,
         "OPTIONS": {

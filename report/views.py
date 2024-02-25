@@ -20,6 +20,9 @@ from .utils import *
 from django.core.mail import send_mail
 from django.utils.html import format_html
 from django.template.defaulttags import register
+import openpyxl
+import os
+from pathlib import Path
 
 @register.filter
 def startwith(value, word):
@@ -183,6 +186,66 @@ def editTransitorView(request, id):
     context = {'form': form, 'transitor': transitor}
 
     return render(request, 'transitor_form.html', context)
+
+# BUDGET_COST
+@login_required(login_url='login')
+@admin_required
+def listBudgetCostView(request):
+    budgets = BudgetCost.objects.all().order_by('id')
+    filteredData = BudgetCostFilter(request.GET, queryset=budgets)
+    budgets = filteredData.qs
+    page_size_param = request.GET.get('page_size')
+    page_size = int(page_size_param) if page_size_param else 12   
+    paginator = Paginator(budgets, page_size)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    context = { 'page': page, 'filtredData': filteredData }
+    return render(request, 'list_budgets.html', context)
+
+@login_required(login_url='login')
+@admin_required
+def deleteBudgetCostView(request, id):
+    budget = BudgetCost.objects.get(id=id)
+    budget.delete()
+    cache_param = str(uuid.uuid4())
+    url_path = reverse('budgets')
+    redirect_url = f'{url_path}?cache={cache_param}'
+    return redirect(redirect_url)
+
+@login_required(login_url='login')
+@admin_required
+def createBudgetCostView(request):
+    form = BudgetCostForm()
+    if request.method == 'POST':
+        form = BudgetCostForm(request.POST)
+        if form.is_valid():
+            form.save()
+            cache_param = str(uuid.uuid4())
+            url_path = reverse('budgets')
+            redirect_url = f'{url_path}?cache={cache_param}'
+            return redirect(redirect_url)
+    context = {'form': form}
+    return render(request, 'budget_form.html', context)
+
+@login_required(login_url='login')
+@admin_required
+def editBudgetCostView(request, id):
+    budget = BudgetCost.objects.get(id=id)
+    form = BudgetCostForm(instance=budget)
+    if request.method == 'POST':
+        form = BudgetCostForm(request.POST, instance=budget)
+        if form.is_valid():
+            form.save()
+            cache_param = str(uuid.uuid4())
+            url_path = reverse('budgets')
+            page = request.GET.get('page', '1')
+            page_size = request.GET.get('page_size', '12')
+            search = request.GET.get('search', '')
+            redirect_url = f'{url_path}?cache={cache_param}&page={page}&page_size={page_size}&search={search}'
+            return redirect(redirect_url)
+    context = {'form': form, 'budget': budget}
+
+    return render(request, 'budget_form.html', context)
 
 #REPORTS
 
@@ -371,17 +434,50 @@ def confirmReport(request, pk):
     
     if report.state != 'Confirmé':
         report.state = 'Confirmé'
-        #report.save()
+        report.save()
 
-    subject = 'Rapport de dossier d\'importation ' + '[' + str(report.id) + ']'
+    subject = f'Rapport de dossier d\'importation [{report.id}]'
     address = 'http://10.10.10.53:8022/report/'
-    message = '''
+    message = f'''
             <p>Bonjour l'équipe,</p>
-            <p>Un rapport a été créé par <b style="color: #002060">''' + report.creator.fullname
-            
-    message += '''<p>Pour plus de détails, veuillez visiter <a href="''' + address + str(report.id) +'''/">''' + address + str(report.id) +'''/</a>.</p>'''
-    formatHtml = format_html(message)
+            <p>Un rapport a été créé par <b style="color: #002060">{report.creator.fullname}</b></p>
+    '''
     
+    for pimported in report.pimporteds():
+        found = False
+        new_cost = round(pimported.cost_u, 3)
+        new_ref = pimported.report.ref_folder
+        article = f'[{pimported.article_code}] {pimported.article_designation}'
+        
+        prev_importation = PImported.objects.exclude(id=pimported.id).filter(article_id=pimported.article_id).order_by('-report__date_calc_cost').first()
+        budget_obj = BudgetCost.objects.filter(article_id=pimported.article_id).first()
+        if not budget_obj:
+            cb, tr= 'Budget non renseigné.', 0
+        else:
+            cb, tr = budget_obj.budget, round(budget_obj.budget / new_cost, 2)
+        if prev_importation:
+            found = True
+            old_cost = round(prev_importation.cost_u, 3)
+            old_ref = prev_importation.report.ref_folder
+        else:
+            script_dir = Path(__file__).parent.absolute()
+            excel_file_path = os.path.join(script_dir, 'old_products.xlsx')
+            workbook = openpyxl.load_workbook(excel_file_path)
+            sheet = workbook.active
+            old_cost, old_ref = 0, ''
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                if row[0] == pimported.article_code:
+                    old_cost, old_ref = row[3], row[4]
+                    found = True
+                    break
+            workbook.close()
+        if not found:
+            old_cost, old_ref = 0, 'Non trouvé'
+        message += getArticleTable(old_cost, new_cost, cb, tr, old_ref, new_ref, article)
+        message += '<br>'
+    message += f'''<p>Pour plus de détails, veuillez visiter <a href="{address}{report.id}/">{address}{report.id}/</a>.</p>'''
+    formatHtml = format_html(message)
+
     if report.site.address:
         recipient_list = report.site.address.split('&')
     else:
@@ -393,6 +489,35 @@ def confirmReport(request, pk):
     cache_param = str(uuid.uuid4())
     redirect_url = f'{url_path}?cache={cache_param}'
     return redirect(redirect_url)
+
+def getArticleTable(old_cost, new_cost, cb, tr, old_ref, new_ref, article):
+    colorE = round(old_cost / new_cost, 2) >= 1 and 'green' or 'red'
+    colorR = tr >= 1 and 'green' or 'red'
+    emojiE = '⬆️' if round(old_cost / new_cost, 2) >= 1 else '⬇️'
+    emojiR = '⬆️' if tr >= 1 else '⬇️'
+    if isinstance(cb, float):
+        cb = f'{round(cb, 3):,.2f}'
+    table = f'<br><p>Produit <b style="color: #002060">{article}:</b></p><br>'
+    table += '<table style="border-collapse: collapse; text-align: center; width: 100%;">'
+    table += '<thead><tr><th></th>'
+    table += '<th style="color: white; background-color: #002060; border-bottom: 1px solid black;">Dernier Coût</th>'
+    table += '<th style="color: white; background-color: #002060; border-bottom: 1px solid black;">Coût Actuel</th>'
+    table += '<th style="color: white; background-color: #002060; border-bottom: 1px solid black;">Coût Budgetaire</th>'
+    table += '<th style="color: white; background-color: #002060; border-bottom: 1px solid black;">Taux Evolution</th>'
+    table += '<th style="color: white; background-color: #002060; border-bottom: 1px solid black;">Taux Réalisation</th>'
+    table += '</tr></thead><tbody>'
+    table += '<tr style="border-bottom: 1px solid black;"><td></td>'
+    table += f'<td style="color: black; background-color: #f2f2f2; border-bottom: 1px solid black;">{round(old_cost, 3):,.2f}</td>'
+    table += f'<td style="color: black; background-color: #f2f2f2; border-bottom: 1px solid black;">{round(new_cost, 3):,.2f}</td>'
+    table += f'<td style="color: black; background-color: #f2f2f2; border-bottom: 1px solid black;">{cb}</td>'
+    table += f'<td style="color: {colorE}; background-color: #f2f2f2; border-bottom: 1px solid black;"><b>{round(old_cost / new_cost, 2):,.2f}% {emojiE}</b></td>'
+    table += f'<td style="color: {colorR}; background-color: #f2f2f2; border-bottom: 1px solid black;"><b>{tr}% {emojiR}</b></td>'
+    table += '</tr>'
+    table += '<tr><td style="color: white; background-color: #002060;">N° dossier</td>'
+    table += f'<td style="color: black; background-color: #f2f2f2;">{old_ref}</td>'
+    table += f'<td style="color: black; background-color: #f2f2f2;">{new_ref}</td>'
+    table += '<td style="color: black; background-color: #f2f2f2;"></td><td style="color: black; background-color: #f2f2f2;"></td><td style="color: black; background-color: #f2f2f2;"></td></tr></tbody></table>'
+    return table
 
 @login_required(login_url='login')
 @check_creator
