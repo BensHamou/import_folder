@@ -484,7 +484,7 @@ def confirmReport(request, pk):
         recipient_list = ['benshamou@gmail.com'] 
 
     messages.success(request, 'Rapport validé avec succès')
-    send_mail(subject, "", 'pumafimport@outlook.com', recipient_list, html_message=formatHtml)
+    send_mail(subject, "", 'Puma Dossier d\'Importation', recipient_list, html_message=formatHtml)
     url_path = reverse('view_report', args=[report.id])
     cache_param = str(uuid.uuid4())
     redirect_url = f'{url_path}?cache={cache_param}'

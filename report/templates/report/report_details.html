@@ -396,7 +396,7 @@ Rapport - {{ report.ref_folder }}
                         <td>
                             <div>
                                 <p class="tdLabel">Coût / U</p>
-                                <p class="valueLead mb-0">{{ pimported.cost_u }}</p>
+                                <p class="valueLead mb-0">{{ pimported.cost_u|intcomma }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>

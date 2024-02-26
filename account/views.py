@@ -61,8 +61,6 @@ def refreshUsersList(request):
         data = json.loads(response.content)
         group_users = json.loads(response_.content)['members']
 
-        print(group_users)
-
         new_users_list = [user for user in data['users'] if user['fullname'] in group_users and user['AD2000'] not in usernames]
 
         for user in new_users_list:
