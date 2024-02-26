@@ -116,7 +116,7 @@ class ReportForm(ModelForm):
     customs_honorary = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Honorraire Douanes')))
     local_transport = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Transport Local')))
     other_fees = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Autres Frais')))
-    surestaries = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Serustaries')))
+    surestaries = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Surestaries')))
 
     observation = forms.CharField(widget=forms.Textarea(attrs= getAttrs('textarea','Observation')), required=False)
 
