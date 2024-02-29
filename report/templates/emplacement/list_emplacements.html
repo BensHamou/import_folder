@@ -36,6 +36,7 @@ Devises
                 <tr style="vertical-align: middle; color: #45558A;">
                 <th>#</th>
                 <th>Désignation</th>
+                <th>Type</th>
                 <th>Région</th>
                 <th style="width: 5vw;">Actions</th>
                 </tr>
@@ -45,6 +46,7 @@ Devises
                 <tr style="color: #0C2858;">
                     <td>{{ emplacement.id }}</td>
                     <td>{{ emplacement.designation }}</td>
+                    <td>{{ emplacement.type }}</td>
                     <td>{{ emplacement.region }}</td>
                     <td style="vertical-align: middle;">
                         <button type="button" onclick="window.location='{% url 'edit_emplacement' emplacement.id %}{% if request.GET.page %}?page={{ request.GET.page }}{% else %}?page=1{% endif %}{% if request.GET.page_size %}&page_size={{ request.GET.page_size }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}'" class="btn" style="padding: 2px;"><i class="fas fa-edit" style="color: #45558A;"></i></button>

@@ -40,9 +40,10 @@ def getAttrs(type, placeholder='', other={}):
 class EmplacementForm(ModelForm):
     class Meta:
         model = Emplacement
-        fields = ['designation', 'region']
+        fields = ['designation', 'type', 'region']
     
     designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control','Désignation')))
+    type = forms.ChoiceField(choices=Emplacement.TYPE, widget=forms.Select(attrs=getAttrs('select')))
     region = forms.ChoiceField(choices=Emplacement.REGION, widget=forms.Select(attrs=getAttrs('select')))
        
 class TransitorForm(ModelForm):
@@ -80,7 +81,7 @@ class BudgetCostForm(ModelForm):
 class ReportForm(ModelForm):
     class Meta:
         model = Report
-        fields = ['ref_folder', 'site', 'fournisseur', 'fournisseur_id', 'n_facture', 'lieu_decharge', 'transitor', 'n_facture2', 
+        fields = ['ref_folder', 'site', 'fournisseur', 'fournisseur_id', 'n_facture', 'lieu_decharge', 'port_decharge', 'transitor', 'n_facture2', 
                   'camion', 'date_in_stock', 'date_calc_cost', 'exchange_rate', 'facture_amount', 'facture_fees', 'facture_currency', 
                   'ladding_bill', 'shopping', 'customs', 'tcs', 'daps', 'dd', 'customs_honorary', 'local_transport', 'other_fees', 'surestaries'
                   , 'local_currency', 'observation']
@@ -92,7 +93,8 @@ class ReportForm(ModelForm):
 
     fournisseur = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchReq','Fournisseur')))
     n_facture = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq', 'N° Facture')))
-    lieu_decharge = forms.ModelChoiceField(queryset=Emplacement.objects.all(), widget=forms.Select(attrs= getAttrs('select2Req')), empty_label="Lieu Déchargement")
+    lieu_decharge = forms.ModelChoiceField(queryset=Emplacement.objects.filter(type='Lieu'), widget=forms.Select(attrs= getAttrs('select2')), empty_label="Lieu Déchargement", required=False)
+    port_decharge = forms.ModelChoiceField(queryset=Emplacement.objects.filter(type='Port'), widget=forms.Select(attrs= getAttrs('select2Req')), empty_label="Port Déchargement")
     transitor = forms.ModelChoiceField(queryset=Transitor.objects.all(), widget=forms.Select(attrs= getAttrs('select2Req')), empty_label="Transitaire")
     n_facture2 = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'N° Facture 2')), required=False)
     camion = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Camion')))

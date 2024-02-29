@@ -17,8 +17,14 @@ class Emplacement(models.Model):
         ('Centre', 'Centre'),
         ('Centre/Ouest', 'Centre/Ouest'),
     ]
+ 
+    TYPE = [
+        ('Port', 'Port'),
+        ('Lieu', 'Lieu')
+    ]
 
     designation = models.CharField(max_length=100)
+    type = models.CharField(choices=TYPE, max_length=20, default='Lieu')
     region = models.CharField(choices=REGION, max_length=20, default='Ouest')
 
     def __str__(self):
@@ -65,7 +71,8 @@ class Report(models.Model):
     fournisseur = models.CharField(max_length=255)
 
     n_facture = models.CharField(max_length=15)
-    lieu_decharge = models.ForeignKey(Emplacement, null=True, on_delete=models.SET_NULL)
+    lieu_decharge = models.ForeignKey(Emplacement, null=True, on_delete=models.SET_NULL, limit_choices_to={'type': 'Lieu'}, related_name='lieu_decharge')
+    port_decharge = models.ForeignKey(Emplacement, null=True, on_delete=models.SET_NULL, limit_choices_to={'type': 'Port'}, related_name='port_decharge')
     transitor = models.ForeignKey(Transitor, null=True, on_delete=models.SET_NULL)
     n_facture2 = models.CharField(max_length=15, blank=True, null=True)
     camion = models.IntegerField()
