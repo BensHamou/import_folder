@@ -221,4 +221,4 @@ class PImported(models.Model):
         return round(self.total / self.qte, 3)
 
     def __str__(self):
-        return self.article_code + self.article_designation + " - " + self.repartition + "% (R" + str(self.report.id) +")"
+        return self.article_code + self.article_designation + " - " + str(self.repartition) + "% (R" + str(self.report.id) +")"
