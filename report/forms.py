@@ -162,8 +162,8 @@ class PImportedForm(ModelForm):
         model = PImported
         fields = ['article_id', 'article_code', 'article_designation', 'qte', 'prix_exw', 'tcs', 'dd', 'daps', 'nbr_blt', 'repartition']
     
-    min_max = {'max': '100', 'min': '0', 'step': '0.001'}
-    min = {'min': '0', 'step': '0.001'}
+    min_max = {'max': '100', 'min': '0'}
+    min = {'min': '0'}
 
     article_code = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchTDReq','Code')))
     article_designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq','Designation', {'disabled': 'disabled'})))
