@@ -70,7 +70,7 @@ Rapport - {{ report.ref_folder }}
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">N° Facture</label>
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Facture fournisseur</label>
                     <div class="col-sm-9">
                         <div class="form-control-plaintext text-detail">
                             {{ report.n_facture }}
@@ -78,7 +78,7 @@ Rapport - {{ report.ref_folder }}
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">N° Facture 2</label>
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Facture transitaire</label>
                     <div class="col-sm-9">
                         <div class="form-control-plaintext text-detail">
                             {% if report.n_facture2 %}{{ report.n_facture2 }}{% else %}/{% endif %}
@@ -142,10 +142,18 @@ Rapport - {{ report.ref_folder }}
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">Camion</label>
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">TC 40"</label>
                     <div class="col-sm-9">
                         <div class="form-control-plaintext text-detail">
-                            {{ report.camion }}
+                            {% if report.tc_40  %}{{ report.tc_40 }}{% else %}/{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <label class="col-sm-3 col-form-label" style="color: #0C2858;">TC 20"</label>
+                    <div class="col-sm-9">
+                        <div class="form-control-plaintext text-detail">
+                            {% if report.tc_20  %}{{ report.tc_20 }}{% else %}/{% endif %}
                         </div>
                     </div>
                 </div>

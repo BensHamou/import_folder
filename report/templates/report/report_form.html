@@ -93,7 +93,7 @@ Rapport
                         </div>
                     </div>
                 </div>
-                <!-- FOURNISSEUR - PORT DECHARGEMENT - LIEU DECHARGEMENT - TRANSITAIRE - CAMION -->
+                <!-- FOURNISSEUR - PORT DECHARGEMENT - LIEU DECHARGEMENT - TRANSITAIRE - TC 40 - TC 20 -->
                 <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label labelCustom" for="fournisseur">Fournisseur</label>
@@ -166,13 +166,30 @@ Rapport
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="form-group row">
-                        <label class="col-sm-4 col-form-label labelCustom" for="camion">Camion</label>
+                        <label class="col-sm-4 col-form-label labelCustom" for="tc_40">TC 40"</label>
                         <div class="col-sm-8">
                             <div class="form-outline">
-                                {{ form.camion }}
-                                {% if form.camion.errors %}
+                                {{ form.tc_40 }}
+                                {% if form.tc_40.errors %}
                                     <div style="color: red;">
-                                        {% for error in form.camion.errors %}
+                                        {% for error in form.tc_40.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="tc_20">TC 20"</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.tc_20 }}
+                                {% if form.tc_20.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.tc_20.errors %}
                                             *{{ error }}
                                         {% endfor %}
                                     </div>

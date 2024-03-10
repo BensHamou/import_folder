@@ -82,7 +82,7 @@ class ReportForm(ModelForm):
     class Meta:
         model = Report
         fields = ['ref_folder', 'site', 'fournisseur', 'fournisseur_id', 'n_facture', 'lieu_decharge', 'port_decharge', 'transitor', 'n_facture2', 
-                  'camion', 'date_in_stock', 'date_calc_cost', 'exchange_rate', 'facture_amount', 'facture_fees', 'facture_currency', 
+                  'tc_40', 'tc_20', 'date_in_stock', 'date_calc_cost', 'exchange_rate', 'facture_amount', 'facture_fees', 'facture_currency', 
                   'ladding_bill', 'shopping', 'customs', 'tcs', 'daps', 'dd', 'customs_honorary', 'local_transport', 'other_fees', 'surestaries'
                   , 'local_currency', 'observation']
 
@@ -92,12 +92,13 @@ class ReportForm(ModelForm):
     site = forms.ModelChoiceField(queryset=Site.objects.all(), widget=forms.Select(attrs= getAttrs('select2')), empty_label="Site")
 
     fournisseur = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchReq','Fournisseur')))
-    n_facture = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq', 'N° Facture')))
+    n_facture = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq', 'Facture fournisseur')))
     lieu_decharge = forms.ModelChoiceField(queryset=Emplacement.objects.filter(type='Lieu'), widget=forms.Select(attrs= getAttrs('select2')), empty_label="Lieu Déchargement", required=False)
     port_decharge = forms.ModelChoiceField(queryset=Emplacement.objects.filter(type='Port'), widget=forms.Select(attrs= getAttrs('select2Req')), empty_label="Port Déchargement")
     transitor = forms.ModelChoiceField(queryset=Transitor.objects.all(), widget=forms.Select(attrs= getAttrs('select2Req')), empty_label="Transitaire")
-    n_facture2 = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'N° Facture 2')), required=False)
-    camion = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Camion')))
+    n_facture2 = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Facture transitaire')), required=False)
+    tc_40 = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','TC 40"')), required=False)
+    tc_20 = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','TC 20"')), required=False)
     date_in_stock = forms.DateField(initial=timezone.now().date(), widget=forms.widgets.DateInput(attrs= getAttrs('dateReq'), format='%Y-%m-%d'))
     date_calc_cost = forms.DateField(initial=timezone.now().date(), widget=forms.widgets.DateInput(attrs= getAttrs('dateReq'), format='%Y-%m-%d'))
 

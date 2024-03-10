@@ -75,7 +75,9 @@ class Report(models.Model):
     port_decharge = models.ForeignKey(Emplacement, null=True, on_delete=models.SET_NULL, limit_choices_to={'type': 'Port'}, related_name='port_decharge')
     transitor = models.ForeignKey(Transitor, null=True, on_delete=models.SET_NULL)
     n_facture2 = models.CharField(max_length=15, blank=True, null=True)
-    camion = models.IntegerField()
+    camion = models.IntegerField(blank=True, null=True)
+    tc_40 = models.IntegerField(blank=True, null=True)
+    tc_20 = models.IntegerField(blank=True, null=True)
     date_in_stock = models.DateField()
     date_calc_cost = models.DateField()
     
