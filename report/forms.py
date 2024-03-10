@@ -97,8 +97,8 @@ class ReportForm(ModelForm):
     port_decharge = forms.ModelChoiceField(queryset=Emplacement.objects.filter(type='Port'), widget=forms.Select(attrs= getAttrs('select2Req')), empty_label="Port Déchargement")
     transitor = forms.ModelChoiceField(queryset=Transitor.objects.all(), widget=forms.Select(attrs= getAttrs('select2Req')), empty_label="Transitaire")
     n_facture2 = forms.CharField(widget=forms.TextInput(attrs=getAttrs('control', 'Facture transitaire')), required=False)
-    tc_40 = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','TC 40"')), required=False)
-    tc_20 = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','TC 20"')), required=False)
+    tc_40 = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('control','TC 40"')), required=False)
+    tc_20 = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('control','TC 20"')), required=False)
     date_in_stock = forms.DateField(initial=timezone.now().date(), widget=forms.widgets.DateInput(attrs= getAttrs('dateReq'), format='%Y-%m-%d'))
     date_calc_cost = forms.DateField(initial=timezone.now().date(), widget=forms.widgets.DateInput(attrs= getAttrs('dateReq'), format='%Y-%m-%d'))
 
