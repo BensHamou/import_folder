@@ -1,6 +1,7 @@
 from django.db import models
 from account.models import User, Site, Currency
 from django.core.validators import MinValueValidator, MaxValueValidator
+import math
 
 class Setting(models.Model):
     name = models.CharField(max_length=50)
@@ -173,7 +174,7 @@ class PImported(models.Model):
     daps = models.FloatField(default=0, validators=[MinValueValidator(0)], null=True)
     
     nbr_blt = models.IntegerField(default=0, validators=[MinValueValidator(0)])
-    repartition = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    #repartition = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
 
     @property
@@ -187,40 +188,45 @@ class PImported(models.Model):
 
 
     @property
+    def repartition(self):
+        return round(self.nbr_blt / self.report.total_products_nbr_plt * 100, 9)
+
+
+    @property
     def fret(self):
-        return round(self.repartition * self.report.facture_fees  / 100, 2)
+        return round(self.repartition * self.report.facture_fees  / 100, 9)
     
     @property
     def dzd(self):
-        return round(((self.qte * self.prix_exw) + self.fret)  * self.report.exchange_rate, 2)
+        return round(((self.qte * self.prix_exw) + self.fret)  * self.report.exchange_rate, 9)
     
     @property
     def mnt_tcs(self):
         tcs = self.tcs or 0
-        return round(tcs  * self.dzd / 100, 2)
+        return math.floor(tcs * self.dzd / 100)
     
     @property
     def mnt_dd(self):
         dd = self.dd or 0
-        return round(dd  * self.dzd, 2)
+        return round(dd  * self.dzd, 9)
     
     @property
     def mnt_daps(self):
         daps = self.daps or 0
-        return round(daps  * self.dzd, 2)
+        return round(daps  * self.dzd, 9)
     
     @property
     def mnt_diver(self):
         return round((self.report.customs_honorary + self.report.local_transport + self.report.other_fees + self.report.surestaries + 
-                self.report.ladding_bill + self.report.shopping + self.report.customs) * self.repartition / 100, 2)
+                self.report.ladding_bill + self.report.shopping + self.report.customs) * self.repartition / 100, 9)
     
     @property
     def total(self):
-        return round((self.dzd + self.mnt_tcs + self.mnt_dd + self.mnt_daps + self.mnt_diver) * self.repartition / 100, 2)
+        return round((self.dzd + self.mnt_tcs + self.mnt_dd + self.mnt_daps + self.mnt_diver), 9)
     
     @property
     def cost_u(self):
-        return round(self.total / self.qte, 3)
+        return round(self.total / self.qte, 6)
 
     def __str__(self):
         return self.article_code + self.article_designation + " - " + str(self.repartition) + "% (R" + str(self.report.id) +")"

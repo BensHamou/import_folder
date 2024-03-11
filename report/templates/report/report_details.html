@@ -314,7 +314,7 @@ Rapport - {{ report.ref_folder }}
                 <th class="d-none d-md-table-cell thPR">Produit</th>
                 <th class="d-none d-md-table-cell">Quantité</th>
                 <th class="d-none d-md-table-cell">Prix EXW</th>
-                <th class="d-none d-md-table-cell">Frais</th>
+                <th class="d-none d-md-table-cell">Fret</th>
                 <th class="d-none d-md-table-cell">DZD</th>
                 <th class="d-none d-md-table-cell">TCS</th>
                 <th class="d-none d-md-table-cell">Montant TCS</th>
@@ -352,13 +352,13 @@ Rapport - {{ report.ref_folder }}
                         <td>
                             <div>
                                 <p class="tdLabel">Frais</p>
-                                <p class="valueLead mb-0">{% if pimported.fret > 0 %}{{ pimported.fret|intcomma }} {{ pimported.foreign_currency }}{% else %}/{% endif %}</p>
+                                <p class="valueLead mb-0">{% if pimported.fret > 0 %}{{ pimported.fret|floatformat:"2g" }} {{ pimported.foreign_currency }}{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">DZD</p>
-                                <p class="valueLead mb-0">{% if pimported.dzd > 0 %}{{ pimported.dzd|intcomma }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
+                                <p class="valueLead mb-0">{% if pimported.dzd > 0 %}{{ pimported.dzd | floatformat:"2g" }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
@@ -370,49 +370,49 @@ Rapport - {{ report.ref_folder }}
                         <td>
                             <div>
                                 <p class="tdLabel">Montant TCS</p>
-                                <p class="valueLead mb-0">{{ pimported.mnt_tcs|intcomma }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_tcs | floatformat:"2g" }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">DD</p>
-                                <p class="valueLead mb-0">{% if pimported.dd > 0 %}{{ pimported.dd|intcomma }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
+                                <p class="valueLead mb-0">{% if pimported.dd > 0 %}{{ pimported.dd|floatformat:"2g" }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">Montant DD</p>
-                                <p class="valueLead mb-0">{{ pimported.mnt_dd|intcomma }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_dd|floatformat:"2g" }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">DAPS</p>
-                                <p class="valueLead mb-0">{% if pimported.daps > 0 %}{{ pimported.daps|intcomma }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
+                                <p class="valueLead mb-0">{% if pimported.daps > 0 %}{{ pimported.daps|floatformat:"2g" }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">Montant DAPS</p>
-                                <p class="valueLead mb-0">{{ pimported.mnt_daps|intcomma }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_daps|floatformat:"2g" }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">Montant Divers</p>
-                                <p class="valueLead mb-0">{{ pimported.mnt_diver|intcomma }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.mnt_diver|floatformat:"2g" }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">Total</p>
-                                <p class="valueLead mb-0">{{ pimported.total|intcomma }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.total|floatformat:"2g" }} {{ pimported.local_currency }}</p>
                             </div>
                         </td>
                         <td>
                             <div>
                                 <p class="tdLabel">Coût / U</p>
-                                <p class="valueLead mb-0">{{ pimported.cost_u|intcomma }} {{ pimported.local_currency }}</p>
+                                <p class="valueLead mb-0">{{ pimported.cost_u|intcomma }}</p>
                             </div>
                         </td>
                         <td>
@@ -424,7 +424,7 @@ Rapport - {{ report.ref_folder }}
                         <td class="tdLast">
                             <div>
                                 <p class="tdLabel">Répartition</p>
-                                <p class="valueLead mb-0">{{ pimported.repartition }}%</p>
+                                <p class="valueLead mb-0">{{ pimported.repartition|floatformat:"0" }}%</p>
                             </div>
                         </td>
                     </tr>

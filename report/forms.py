@@ -160,7 +160,7 @@ class ReportForm(ModelForm):
 class PImportedForm(ModelForm):
     class Meta:
         model = PImported
-        fields = ['article_id', 'article_code', 'article_designation', 'qte', 'prix_exw', 'tcs', 'dd', 'daps', 'nbr_blt', 'repartition']
+        fields = ['article_id', 'article_code', 'article_designation', 'qte', 'prix_exw', 'tcs', 'dd', 'daps', 'nbr_blt']
     
     min_max = {'max': '100', 'min': '0'}
     min = {'min': '0'}
@@ -176,8 +176,8 @@ class PImportedForm(ModelForm):
     daps = forms.FloatField(label='DAPS', widget=forms.NumberInput(attrs= getAttrs('control','DAPS', min)), required=False)
     
     nbr_blt = forms.IntegerField(label='Nombre Palletes', widget=forms.NumberInput(attrs= getAttrs('controlReq','Nombre Palletes')))
-    repartition = forms.FloatField(label='Répartition', widget=forms.NumberInput(attrs= getAttrs('controlReq','Répartition', min)))
+    #repartition = forms.FloatField(label='Répartition', widget=forms.NumberInput(attrs= getAttrs('controlReq','Répartition', min)))
 
 PImportedsFormSet = inlineformset_factory(Report, PImported, form=PImportedForm, 
                                           fields=['article_code', 'article_designation', 'article_id', 'qte', 'prix_exw', 
-                                                  'tcs', 'dd', 'daps', 'nbr_blt', 'repartition'], extra=0)
+                                                  'tcs', 'dd', 'daps', 'nbr_blt'], extra=0)
