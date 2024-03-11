@@ -22,7 +22,7 @@ Rapport
         <input type="hidden" value="1" id="isUpdating"/> 
     {% endif %}
     <div id="detailReport"  class="row mt-3" style="width: 92vw;">
-        <div class="card card-body mb-5 custom-card col-lg-5 col-md-5 col-sm-12">
+        <div class="card card-body mb-5 custom-card col-lg-5 col-md-7 col-sm-10">
             <div class="row mb-4">
                 <!-- SITE - N° de dossier - N Facture - N Facture 2 -->
                 <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
@@ -508,7 +508,7 @@ Rapport
                 </div>
             </div>
         </div>
-        <div class="col-lg-7 col-md-7 col-sm-0">
+        <div class="col-lg-7 col-md-5 col-sm-2">
         </div>
         <div class="d-flex justify-content-center align-items-center form-group mb-2">
             <button type="submit" class="btn btn-secondary btn-block customSaveButton">
@@ -516,7 +516,7 @@ Rapport
             </button>
         </div>
     </div>
-    <div id="detailProducts" class="row mt-3" style="width: 92vw; display: none;">
+    <div id="detailProducts" class="row mt-3 listProduct">
         <div class="col-lg-12 col-md-12 col-sm-12">
             {% with named_formsets.pimporteds as formset %}
                 {{ formset.management_form }}
@@ -527,14 +527,15 @@ Rapport
                             {% endfor %}
                             {% for field in formset.empty_form.visible_fields %}
                             
-                            <td>
+                            <td class="{% if field.label == 'Designation' %}tdArt{% elif field.label == 'Supprimer' %}tdDel{% endif %}">
+                                <p class="tdLabel">{{field.label}}</p>
                                 {% if field.label == 'Supprimer' %}
                                     <div class="d-flex justify-content-center">
                                         <button type="button" onclick="deleteRow(this.parentNode.parentNode.parentNode)" class="btn" style="color: #133356;">
                                             <i class="far fa-trash-alt"></i>
                                         </button>
                                     </div>
-                                {% elif field.label == 'Article code' %}
+                                {% elif field.label == 'Code' %}
                                     {{ field }}
                                     {{ formset.empty_form.article_id }}
                                     <div id="suggestions" class="sugdiv"></div>
@@ -555,69 +556,74 @@ Rapport
                     <div class="card-header card-header-secondary">
                         <p class="card-title lead" style="font-size: 26px; color: #133356;">Produits</p>
                     </div>
-                    <table class="table card-header">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10vw;">Code</th>
-                                    <th style="width: 10vw;">Désignation</th>
-                                    <th>Quantité</th>
-                                    <th>Prix EXW</th>
-                                    <th>TCS (%)</th>
-                                    <th>DD</th>
-                                    <th>DAPS</th>
-                                    <th>Palette</th>
-                                    <th>Répartition (%)</th>
-                                    <th style="text-align: center; width: 1vw;">X</th>
-                                </tr>
-                            </thead>
-                            <tbody id="item-pimporteds">
-                                {% for error in formset.non_form_errors %}
-                                    <span style="color: red">*{{ error }}</span>
-                                {% endfor %}
-                                {% for formss in formset %}
-                                    {{ formss.management_form }}
-                                    <tr id="pimporteds-{{ forloop.counter0 }}" class= hide_all>
-                                        {{ formss.id }}
-                                        {% for field in formss.visible_fields %}
-                                            {% if field.label == 'Article code' %}
-                                            <td>
-                                                {{ field }}
-                                                {{ formss.article_id }}
-                                                <div id="suggestions" class="sugdiv"></div>
-                                                {% for error in field.errors %}
-                                                    <span style="color: red">*{{ error }}</span>
-                                                {% endfor %}
-                                            </td>
-                                            {% elif not field.label == 'Supprimer' %}
+                    <div style="overflow-x: scroll; max-width: 90vw;">
+                        <table class="table card-header">
+                                <thead>
+                                    <tr>
+                                        <th class="d-none d-md-table-cell">Code</th>
+                                        <th class="d-none d-md-table-cell thArt">Désignation</th>
+                                        <th class="d-none d-md-table-cell">Quantité</th>
+                                        <th class="d-none d-md-table-cell">Prix EXW</th>
+                                        <th class="d-none d-md-table-cell">TCS (%)</th>
+                                        <th class="d-none d-md-table-cell">DD</th>
+                                        <th class="d-none d-md-table-cell">DAPS</th>
+                                        <th class="d-none d-md-table-cell">Palettes</th>
+                                        <th class="d-none d-md-table-cell">Répartition (%)</th>
+                                        <th class="d-none d-md-table-cell thDel" style="text-align: center;">X</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="item-pimporteds">
+                                    {% for error in formset.non_form_errors %}
+                                        <span style="color: red">*{{ error }}</span>
+                                    {% endfor %}
+                                    {% for formss in formset %}
+                                        {{ formss.management_form }}
+                                        <tr id="pimporteds-{{ forloop.counter0 }}" class= hide_all>
+                                            {{ formss.id }}
+                                            {% for field in formss.visible_fields %}
+                                                {% if field.label == 'Code' %}
                                                 <td>
+                                                    <p class="tdLabel">{{field.label}}</p>
                                                     {{ field }}
+                                                    {{ formss.article_id }}
+                                                    <div id="suggestions" class="sugdiv"></div>
                                                     {% for error in field.errors %}
                                                         <span style="color: red">*{{ error }}</span>
                                                     {% endfor %}
                                                 </td>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% if formss.instance.pk %}
-                                            <td>
-                                                <div class="d-flex justify-content-center">
-                                                <button type="button" onclick="confirmPImportedDel('{{formss.instance.pk|escapejs}}')" class="btn" style="color: #133356;">
-                                                    <i class="far fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                            </td>    
-                                        {% else %}
-                                            <td>
-                                                <div class="d-flex justify-content-center">
-                                                    <button type="button" onclick="deleteRow(this.parentNode.parentNode)" class="btn" style="color: #133356;">
+                                                {% elif not field.label == 'Supprimer' %}
+                                                    <td>
+                                                        <p class="tdLabel">{{field.label}}</p>
+                                                        {{ field }}
+                                                        {% for error in field.errors %}
+                                                            <span style="color: red">*{{ error }}</span>
+                                                        {% endfor %}
+                                                    </td>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if formss.instance.pk %}
+                                                <td class="tdDel">
+                                                    <p class="tdLabel">{{field.label}}</p>
+                                                    <div class="d-flex justify-content-center">
+                                                    <button type="button" onclick="confirmPImportedDel('{{formss.instance.pk|escapejs}}')" class="btn" style="color: #133356;">
                                                         <i class="far fa-trash-alt"></i>
                                                     </button>
                                                 </div>
-                                            </td>    
-                                        {% endif %}
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                    </table>
+                                                </td>    
+                                            {% else %}
+                                                <td>
+                                                    <div class="d-flex justify-content-center">
+                                                        <button type="button" onclick="deleteRow(this.parentNode.parentNode)" class="btn" style="color: #133356;">
+                                                            <i class="far fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>    
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                        </table>
+                    </div>
                     <div class="d-flex justify-content-end align-items-center m-2">
                             <a href="#" id="add-pimporteds-button" class="btn btn-secondary add-pimporteds" style="background-color: #979ba3; border-color: #979ba3;" role="button"><i class="fas fa-plus"></i></a>
                     </div>
@@ -634,6 +640,11 @@ Rapport
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <style>
+    th, td { min-width: 10vw; }
+    .tdLabel { display: none; }
+    .listProduct { width: 92vw; display: none; }
+    .thArt, .tdArt { min-width: 40vw; }
+    .thDel, .tdDel { min-width: 1vw; }
     #suggestions {
       top: 100%;
       left: 0;
@@ -700,12 +711,30 @@ Rapport
         border-color: #dad2ff !important;
         background-color: #dad2ff !important;
     }
+    @media only screen and (max-width: 1200px) {
+        th, td { min-width: 20vw; }
+        .thArt, .tdArt { min-width: 50vw; }
+        .thDel, .tdDel { min-width: 2vw; }
+        .listProduct { width: 80vw; display: none; }
+        .tdLabel{
+            display: block;
+            color: #929292; 
+            font-size: 16px; 
+            margin-bottom: 5px;
+        }
+    }
     @media only screen and (max-width: 767px) {
         td {
             display: block;
             width: 100%;
             text-align: left;
             box-sizing: border-box;
+            margin-bottom: 5px;
+        }
+        .tdLabel{
+            display: block;
+            color: #929292; 
+            font-size: 16px; 
             margin-bottom: 5px;
         }
     }

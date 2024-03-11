@@ -165,16 +165,17 @@ class PImportedForm(ModelForm):
     min_max = {'max': '100', 'min': '0'}
     min = {'min': '0'}
 
-    article_code = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlSearchTDReq','Code')))
-    article_designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq','Designation', {'disabled': 'disabled'})))
+    article_code = forms.CharField(label='Code', widget=forms.TextInput(attrs=getAttrs('controlSearchTDReq','Code')))
+    article_designation = forms.CharField(label='Designation', widget=forms.TextInput(attrs=getAttrs('controlReq','Designation', {'disabled': 'disabled'})))
+    # article_designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq','Designation')))
     article_id = forms.IntegerField(widget=forms.HiddenInput(attrs=getAttrs('controlIDTDReq','ID_fournisseur_id')))
-    qte = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Quantité', min)))
+    qte = forms.FloatField(label='Quantité', widget=forms.NumberInput(attrs= getAttrs('controlReq','Quantité', min)))
     prix_exw = forms.FloatField(label='Prix EXW', widget=forms.NumberInput(attrs= getAttrs('controlReq','Prix EXW', min)))
     tcs = forms.FloatField(label='TCS', widget=forms.NumberInput(attrs= getAttrs('control','TCS', min_max)), required=False)
     dd = forms.FloatField(label='DD', widget=forms.NumberInput(attrs= getAttrs('control','DD', min)), required=False)
     daps = forms.FloatField(label='DAPS', widget=forms.NumberInput(attrs= getAttrs('control','DAPS', min)), required=False)
     
-    nbr_blt = forms.IntegerField(label='Nombre Palletes', widget=forms.NumberInput(attrs= getAttrs('controlReq','Nombre Pallete')))
+    nbr_blt = forms.IntegerField(label='Nombre Palletes', widget=forms.NumberInput(attrs= getAttrs('controlReq','Nombre Palletes')))
     repartition = forms.FloatField(label='Répartition', widget=forms.NumberInput(attrs= getAttrs('controlReq','Répartition', min)))
 
 PImportedsFormSet = inlineformset_factory(Report, PImported, form=PImportedForm, 
