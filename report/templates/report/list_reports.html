@@ -78,7 +78,7 @@ Liste des rapports
                             <td style="vertical-align: middle; padding: 8px 0px; text-align: center;">            
                                 <button type="button" onclick="window.location='{% url 'edit_report' report.id %}'"  style="padding: 2px;"
                                 class="btn" {% if report.state != 'Brouillon' or report.creator != user %} disabled {% endif %}><i class="fas fa-edit" style="color: #45558A;"></i></button>
-                                <button type="button" {% if report.state != 'Brouillon' or report.creator != user %} disabled {% endif %} style="padding: 2px;" onclick="confirmReportDel('{{report.id|escapejs}}', '{{report.n_report|escapejs}}')" class="btn">
+                                <button type="button" {% if report.state != 'Brouillon' or report.creator != user %} disabled {% endif %} style="padding: 2px;" onclick="confirmReportDel('{{report.id|escapejs}}', '{{report.ref_folder|escapejs}}')" class="btn">
                                     <i class="far fa-trash-alt" style="color: #45558A;"></i>
                                 </button>
                             </td>
@@ -155,7 +155,7 @@ Liste des rapports
     const confirmReportDel = (reportID, reportN) => {
         swal({ 
         title: `Confirmation de la suppression.`,   
-        text: `Etes-vous sûr que vous voulez supprimer le rapport N° ${reportN}?`,   
+        text: `Etes-vous sûr que vous voulez supprimer le rapport - N° de dossier ${reportN}?`,   
         type: "warning",
         showCancelButton: true,   
         confirmButtonColor: "#DD6B55",   
