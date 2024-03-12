@@ -208,12 +208,12 @@ class PImported(models.Model):
     @property
     def mnt_dd(self):
         dd = self.dd or 0
-        return round(dd  * self.dzd, 9)
+        return round(dd  * self.dzd / 100, 9)
     
     @property
     def mnt_daps(self):
         daps = self.daps or 0
-        return round(daps  * self.dzd, 9)
+        return round(daps  * self.dzd / 100, 9)
     
     @property
     def mnt_diver(self):

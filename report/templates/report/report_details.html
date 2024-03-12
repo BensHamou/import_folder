@@ -376,7 +376,7 @@ Rapport - {{ report.ref_folder }}
                         <td>
                             <div>
                                 <p class="tdLabel">DD</p>
-                                <p class="valueLead mb-0">{% if pimported.dd > 0 %}{{ pimported.dd|floatformat:"2g" }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
+                                <p class="valueLead mb-0">{% if pimported.dd > 0 %}{{ pimported.dd|floatformat:"2g" }}%{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
@@ -388,7 +388,7 @@ Rapport - {{ report.ref_folder }}
                         <td>
                             <div>
                                 <p class="tdLabel">DAPS</p>
-                                <p class="valueLead mb-0">{% if pimported.daps > 0 %}{{ pimported.daps|floatformat:"2g" }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
+                                <p class="valueLead mb-0">{% if pimported.daps > 0 %}{{ pimported.daps|floatformat:"2g" }}%{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
