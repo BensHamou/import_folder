@@ -173,7 +173,8 @@ class PImported(models.Model):
     dd = models.FloatField(default=0, validators=[MinValueValidator(0)], null=True)
     daps = models.FloatField(default=0, validators=[MinValueValidator(0)], null=True)
     
-    nbr_blt = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    nbr_blt = models.FloatField(default=0, validators=[MinValueValidator(0)])
+    # nbr_blt = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     #repartition = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
 

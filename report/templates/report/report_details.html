@@ -424,7 +424,7 @@ Rapport - {{ report.ref_folder }}
                         <td class="tdLast">
                             <div>
                                 <p class="tdLabel">Répartition</p>
-                                <p class="valueLead mb-0">{{ pimported.repartition|floatformat:"0" }}%</p>
+                                <p class="valueLead mb-0">{{ pimported.repartition|floatformat:"2" }}%</p>
                             </div>
                         </td>
                     </tr>
@@ -535,7 +535,7 @@ Rapport - {{ report.ref_folder }}
                     <td>
                         <div>
                             <p class="tdLabel">Répartition Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_repartition}}%</p>
+                            <p class="valueLead mb-0">{{report.total_products_repartition|floatformat:"2"}}%</p>
                         </div>
                     </td>
                 </tr>

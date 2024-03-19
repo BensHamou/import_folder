@@ -175,7 +175,7 @@ class PImportedForm(ModelForm):
     dd = forms.FloatField(label='DD', widget=forms.NumberInput(attrs= getAttrs('control','DD', min)), required=False)
     daps = forms.FloatField(label='DAPS', widget=forms.NumberInput(attrs= getAttrs('control','DAPS', min)), required=False)
     
-    nbr_blt = forms.IntegerField(label='Nombre Palletes', widget=forms.NumberInput(attrs= getAttrs('controlReq','Nombre Palletes')))
+    nbr_blt = forms.FloatField(label='Nombre Palletes', widget=forms.NumberInput(attrs= getAttrs('controlReq','Nombre Palletes')))
     #repartition = forms.FloatField(label='Répartition', widget=forms.NumberInput(attrs= getAttrs('controlReq','Répartition', min)))
 
 PImportedsFormSet = inlineformset_factory(Report, PImported, form=PImportedForm, 
