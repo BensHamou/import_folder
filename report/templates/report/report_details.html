@@ -522,20 +522,20 @@ Rapport - {{ report.ref_folder }}
                     <td>
                         <div>
                             <p class="tdLabel">Montant Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_total|intcomma}} {{report.local_currency}}</p>
+                            <p class="valueLead mb-0">{{ report.total_products_total|intcomma }} {{report.local_currency}}</p>
                         </div>
                     </td>
                     <td></td>
                     <td>
                         <div>
                             <p class="tdLabel">Nombre Palletes Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_nbr_plt}}</p>
+                            <p class="valueLead mb-0">{{ report.total_products_nbr_plt }}</p>
                         </div>
                     </td>
                     <td>
                         <div>
                             <p class="tdLabel">Répartition Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_repartition|floatformat:"2"}}%</p>
+                            <p class="valueLead mb-0">{{ report.total_products_repartition|floatformat:"2" }}%</p>
                         </div>
                     </td>
                 </tr>

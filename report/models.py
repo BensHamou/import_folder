@@ -1,7 +1,6 @@
 from django.db import models
 from account.models import User, Site, Currency
 from django.core.validators import MinValueValidator, MaxValueValidator
-import math
 
 class Setting(models.Model):
     name = models.CharField(max_length=50)
@@ -190,7 +189,7 @@ class PImported(models.Model):
 
     @property
     def repartition(self):
-        return round(self.nbr_blt / self.report.total_products_nbr_plt * 100, 9)
+        return round(self.nbr_blt / self.report.total_products_nbr_plt * 100, 4)
 
 
     @property
@@ -204,17 +203,17 @@ class PImported(models.Model):
     @property
     def mnt_tcs(self):
         tcs = self.tcs or 0
-        return math.floor(tcs * self.dzd / 100)
+        return round(tcs  * self.dzd / 100, 4)
     
     @property
     def mnt_dd(self):
         dd = self.dd or 0
-        return round(dd  * self.dzd / 100, 9)
+        return round(dd  * self.dzd / 100, 4)
     
     @property
     def mnt_daps(self):
         daps = self.daps or 0
-        return round(daps  * self.dzd / 100, 9)
+        return round(daps  * self.dzd / 100, 4)
     
     @property
     def mnt_diver(self):
