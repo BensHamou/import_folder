@@ -24,7 +24,24 @@ Rapport
     <div id="detailReport"  class="row mt-3" style="width: 92vw;">
         <div class="card card-body mb-5 custom-card col-lg-5 col-md-7 col-sm-10">
             <div class="row mb-4">
-                <!-- SITE - N° de dossier - N Facture - N Facture 2 -->
+                <!-- USER - SITE - N° de dossier - N Facture - N Facture 2 -->
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="creator">Utilisateur</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.creator }}
+                                {% if form.creator.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.creator.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label labelCustom" for="site">Site</label>

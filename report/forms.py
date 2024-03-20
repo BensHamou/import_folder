@@ -81,11 +81,13 @@ class BudgetCostForm(ModelForm):
 class ReportForm(ModelForm):
     class Meta:
         model = Report
-        fields = ['ref_folder', 'site', 'fournisseur', 'fournisseur_id', 'n_facture', 'lieu_decharge', 'port_decharge', 'transitor', 'n_facture2', 
+        fields = ['creator', 'ref_folder', 'site', 'fournisseur', 'fournisseur_id', 'n_facture', 'lieu_decharge', 'port_decharge', 'transitor', 'n_facture2', 
                   'tc_40', 'tc_20', 'date_in_stock', 'date_calc_cost', 'exchange_rate', 'facture_amount', 'facture_fees', 'facture_currency', 
                   'ladding_bill', 'shopping', 'customs', 'tcs', 'daps', 'dd', 'customs_honorary', 'local_transport', 'other_fees', 'surestaries'
                   , 'local_currency', 'observation']
-
+        
+    
+    creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.Select(attrs=getAttrs('select2')), empty_label="Utilisateur")
     # n_report = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','N° Rapport')))
     ref_folder = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq','N° de dossier')))
 
@@ -127,7 +129,7 @@ class ReportForm(ModelForm):
 
 
     def __init__(self, *args, **kwargs):
-        admin = kwargs.pop('admin', None)
+        user = kwargs.pop('user', None)
         sites = kwargs.pop('sites', None)
         state = kwargs.pop('state', None)
         super(ReportForm, self).__init__(*args, **kwargs)
@@ -136,10 +138,14 @@ class ReportForm(ModelForm):
             site = sites.first()
             if site:
                 self.fields['site'].initial = site
+                self.fields['creator'].initial = user
                 self.fields['facture_currency'].initial = site.default_foreign_currency
                 self.fields['local_currency'].initial = site.default_local_currency
-            if not admin and len(sites) < 2:
-                self.fields['site'].widget.attrs['disabled'] = True
+            if not user.is_admin:
+                self.fields['creator'].widget.attrs['disabled'] = True
+                if len(sites) < 2:
+                    self.fields['site'].widget.attrs['disabled'] = True
+
     
     # def clean(self):
     #     cleaned_data = super().clean()

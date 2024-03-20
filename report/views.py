@@ -283,6 +283,7 @@ class ReportInline():
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['sites'] = self.request.user.sites.all()
+        kwargs['user'] = self.request.user
         return kwargs
 
     def form_valid(self, form):
