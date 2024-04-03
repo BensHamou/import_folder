@@ -544,11 +544,11 @@ def live_search(request):
     if search_for == 'fournisseur':
         records = getFournisseurId(term)
         if len(records) > 0:
-            return JsonResponse([{'id': obj[0], 'name': obj[1]} for obj in records], safe=False)
+            return JsonResponse([{'id': obj[0], 'name': obj[1].replace("'","\\'")} for obj in records], safe=False)
         
     elif 'article_code' in search_for:
         records = getProductId(term)
         if len(records) > 0:
-            return JsonResponse([{'id': obj[0], 'name': obj[1], 'code': obj[2]} for obj in records], safe=False)
+            return JsonResponse([{'id': obj[0], 'name': obj[1].replace("'","\\'"), 'code': obj[2]} for obj in records], safe=False)
         
     return JsonResponse([], safe=False)
