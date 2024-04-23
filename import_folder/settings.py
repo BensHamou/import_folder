@@ -87,8 +87,8 @@ DATABASES = {
     #    'NAME': 'ImportDB',
     #    'USER': 'import_report',
     #    'PASSWORD': 'import_report',
-    #    'HOST': '10.10.10.53',
-    #    'PORT': '5422',
+    #    'HOST': '10.10.10.20',
+    #    'PORT': '5169',
     #}
     #'default': {
     #    'ENGINE': 'django.db.backends.postgresql',
