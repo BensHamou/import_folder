@@ -250,7 +250,7 @@ Rapport
                         </div>
                     </div>
                 </div>
-                <!-- TAUX DE CHANGE - MONTANT FACTURE - MONTANT FRET - CURRENCY FOREIGN -->
+                <!-- TAUX DE CHANGE - MONTANT FACTURE - CURRENCY INVOICE - MONTANT FRET - CURRENCY FRET -->
                 <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label labelCustom" for="exchange_rate">Taux de Change</label>
@@ -287,6 +287,23 @@ Rapport
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="facture_currency">Devise Facture</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.facture_currency }}
+                                {% if form.facture_currency.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.facture_currency.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
                         <label class="col-sm-4 col-form-label labelCustom" for="facture_fees">Montant Fret</label>
                         <div class="col-sm-8">
                             <div class="form-outline">
@@ -304,13 +321,13 @@ Rapport
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="form-group row">
-                        <label class="col-sm-4 col-form-label labelCustom" for="facture_currency">Devise</label>
+                        <label class="col-sm-4 col-form-label labelCustom" for="fret_currency">Devise Fret</label>
                         <div class="col-sm-8">
                             <div class="form-outline">
-                                {{ form.facture_currency }}
-                                {% if form.facture_currency.errors %}
+                                {{ form.fret_currency }}
+                                {% if form.fret_currency.errors %}
                                     <div style="color: red;">
-                                        {% for error in form.facture_currency.errors %}
+                                        {% for error in form.fret_currency.errors %}
                                             *{{ error }}
                                         {% endfor %}
                                     </div>

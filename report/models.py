@@ -85,6 +85,7 @@ class Report(models.Model):
     facture_amount = models.FloatField(default=0, validators=[MinValueValidator(0)])
     facture_fees = models.FloatField(default=0, validators=[MinValueValidator(0)])
     facture_currency = models.ForeignKey(Currency, null=True, on_delete=models.SET_NULL, related_name='facture_currency')
+    fret_currency = models.ForeignKey(Currency, null=True, on_delete=models.SET_NULL, related_name='fret_currency')
     
     ladding_bill = models.FloatField(default=0, validators=[MinValueValidator(0)])
     local_currency = models.ForeignKey(Currency, null=True, on_delete=models.SET_NULL, related_name='local_currency')
@@ -105,7 +106,10 @@ class Report(models.Model):
         tcs = self.tcs or 0
         daps = self.daps or 0
         dd = self.dd or 0
-        return round(( (self.facture_amount + self.facture_fees) * self.exchange_rate + self.ladding_bill + self.shopping + 
+        fret = self.facture_fees
+        if self.fret_currency != self.local_currency:
+            fret = fret * self.exchange_rate
+        return round(( self.facture_amount  * self.exchange_rate + fret + self.ladding_bill + self.shopping + 
                 self.customs + tcs + daps + dd + self.customs_honorary + self.local_transport + self.other_fees + self.surestaries), 2)
 
     @property
@@ -180,6 +184,10 @@ class PImported(models.Model):
     @property
     def local_currency(self):
         return self.report.local_currency
+    
+    @property
+    def fret_currency(self):
+        return self.report.fret_currency
 
 
     @property
@@ -198,7 +206,10 @@ class PImported(models.Model):
     
     @property
     def dzd(self):
-        return round(((self.qte * self.prix_exw) + self.fret)  * self.report.exchange_rate, 9)
+        if self.local_currency != self.fret_currency:
+            return round(((self.qte * self.prix_exw) + self.fret)  * self.report.exchange_rate, 9)
+        else:
+            return round((self.qte * self.prix_exw)  * self.report.exchange_rate  + self.fret, 9)
     
     @property
     def mnt_tcs(self):

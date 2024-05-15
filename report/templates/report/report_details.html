@@ -207,7 +207,7 @@ Rapport - {{ report.ref_folder }}
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">Montant Fret</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
-                            {{ report.facture_fees|intcomma }} {{ report.facture_currency }}
+                            {{ report.facture_fees|intcomma }} {{ report.fret_currency }}
                         </div>
                     </div>
                 </div>
@@ -268,7 +268,7 @@ Rapport - {{ report.ref_folder }}
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Trabsort Locale</label>
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">Transport Local</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
                             {{ report.local_transport|intcomma }} {{ report.local_currency }}
@@ -352,7 +352,7 @@ Rapport - {{ report.ref_folder }}
                         <td>
                             <div>
                                 <p class="tdLabel">Frais</p>
-                                <p class="valueLead mb-0">{% if pimported.fret > 0 %}{{ pimported.fret|floatformat:"2g" }} {{ pimported.foreign_currency }}{% else %}/{% endif %}</p>
+                                <p class="valueLead mb-0">{% if pimported.fret > 0 %}{{ pimported.fret|floatformat:"2g" }} {{ pimported.fret_currency }}{% else %}/{% endif %}</p>
                             </div>
                         </td>
                         <td>
@@ -482,7 +482,7 @@ Rapport - {{ report.ref_folder }}
                     <td>
                         <div>
                             <p class="tdLabel">Frais Total</p>
-                            <p class="valueLead mb-0">{{report.total_products_fret|intcomma}} {{report.facture_currency}}</p>
+                            <p class="valueLead mb-0">{{report.total_products_fret|intcomma}} {{report.fret_currency}}</p>
                         </div>
                     </td>
                     <td>

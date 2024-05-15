@@ -82,7 +82,7 @@ class ReportForm(ModelForm):
     class Meta:
         model = Report
         fields = ['creator', 'ref_folder', 'site', 'fournisseur', 'fournisseur_id', 'n_facture', 'lieu_decharge', 'port_decharge', 'transitor', 'n_facture2', 
-                  'tc_40', 'tc_20', 'date_in_stock', 'date_calc_cost', 'exchange_rate', 'facture_amount', 'facture_fees', 'facture_currency', 
+                  'tc_40', 'tc_20', 'date_in_stock', 'date_calc_cost', 'exchange_rate', 'facture_amount', 'facture_fees', 'fret_currency', 'facture_currency', 
                   'ladding_bill', 'shopping', 'customs', 'tcs', 'daps', 'dd', 'customs_honorary', 'local_transport', 'other_fees', 'surestaries'
                   , 'local_currency', 'observation']
         
@@ -107,7 +107,8 @@ class ReportForm(ModelForm):
     exchange_rate = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Taux de Cahnge')))
     facture_amount = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Montant Facture')))
     facture_fees = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Montant Fret')))
-    facture_currency = forms.ModelChoiceField(queryset=Currency.objects.all(), widget=forms.Select(attrs= getAttrs('selectReq')), empty_label="Devise")
+    facture_currency = forms.ModelChoiceField(queryset=Currency.objects.all(), widget=forms.Select(attrs= getAttrs('selectReq')), empty_label="Devise Facture")
+    fret_currency = forms.ModelChoiceField(queryset=Currency.objects.all(), widget=forms.Select(attrs= getAttrs('selectReq')), empty_label="Devise Fret")
 
     ladding_bill = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Connaissement')))
     shopping = forms.FloatField(widget=forms.NumberInput(attrs= getAttrs('controlReq','Magasinage')))
@@ -140,6 +141,7 @@ class ReportForm(ModelForm):
                 self.fields['site'].initial = site
                 self.fields['creator'].initial = user
                 self.fields['facture_currency'].initial = site.default_foreign_currency
+                self.fields['fret_currency'].initial = site.default_foreign_currency
                 self.fields['local_currency'].initial = site.default_local_currency
             if not user.is_admin:
                 self.fields['creator'].widget.attrs['disabled'] = True
