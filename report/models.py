@@ -70,11 +70,11 @@ class Report(models.Model):
     fournisseur_id = models.IntegerField()
     fournisseur = models.CharField(max_length=255)
 
-    n_facture = models.CharField(max_length=15)
+    n_facture = models.CharField(max_length=20)
     lieu_decharge = models.ForeignKey(Emplacement, null=True, on_delete=models.SET_NULL, limit_choices_to={'type': 'Lieu'}, related_name='lieu_decharge')
     port_decharge = models.ForeignKey(Emplacement, null=True, on_delete=models.SET_NULL, limit_choices_to={'type': 'Port'}, related_name='port_decharge')
     transitor = models.ForeignKey(Transitor, null=True, on_delete=models.SET_NULL)
-    n_facture2 = models.CharField(max_length=15, blank=True, null=True)
+    n_facture2 = models.CharField(max_length=20, blank=True, null=True)
     camion = models.IntegerField(blank=True, null=True)
     tc_40 = models.IntegerField(blank=True, null=True)
     tc_20 = models.IntegerField(blank=True, null=True)
