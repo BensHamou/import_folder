@@ -334,7 +334,7 @@ Rapport - {{ report.ref_folder }}
                         <td class="tdPR">
                             <div>
                                 <p class="tdLabel">Produit</p>
-                                <p class="valueLead mb-0">[{{ pimported.article_code }}] {{ pimported.article_designation }}</p>
+                                <p class="valueLead mb-0">[{% if not pimported.is_immo %}{{ pimported.article_code }}{% else %}IMMO{% endif %}] {{ pimported.article_designation }}</p>
                             </div>
                         </td>
                         <td>

@@ -560,7 +560,6 @@ Rapport
                                 {{ fields }}
                             {% endfor %}
                             {% for field in formset.empty_form.visible_fields %}
-                            
                             <td class="{% if field.label == 'Designation' %}tdArt{% elif field.label == 'Supprimer' %}tdDel{% endif %}">
                                 <p class="tdLabel">{{field.label}}</p>
                                 {% if field.label == 'Supprimer' %}
@@ -594,6 +593,7 @@ Rapport
                         <table class="table card-header">
                                 <thead>
                                     <tr>
+                                        <th class="d-none d-md-table-cell">Immo?</th>
                                         <th class="d-none d-md-table-cell">Code</th>
                                         <th class="d-none d-md-table-cell thArt">Désignation</th>
                                         <th class="d-none d-md-table-cell">Quantité</th>
@@ -857,8 +857,24 @@ Rapport
         const noDups = new Set(a);
         return a.length !== noDups.size;
     }
+    function handleImmoClick() {
+        var checkbox = $(this);
+        var articleCode = checkbox.closest('td').next('td').find('input[type="text"]');
+        var articleDesignation = articleCode.closest('td').next('td').find('input[type="text"]');
+        var articleId = checkbox.closest('td').next('td').find('input[type="hidden"]');
+        if (checkbox.is(':checked')) {
+            articleCode.val('IMMO').prop('disabled', true);
+            articleDesignation.val('').prop('disabled', false);
+            articleId.val(0);
+        } else {
+            articleId.val('');
+            articleCode.val('').prop('disabled', false);
+            articleDesignation.val('').prop('disabled', true);
+        }
+    }
     
     $(document).ready(function() {
+
         $('.custom-select').select2({theme: 'bootstrap-5', allowClear: true, });
         
         $('.search-input').keyup(function() {
@@ -924,6 +940,8 @@ Rapport
                 suggestions.hide();
             }
         });
+
+        $(document).on('click', '.immo-input-td', handleImmoClick);
 
         $('.add-pimporteds').click(function(ev) {
             ev.preventDefault();

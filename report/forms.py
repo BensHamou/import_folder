@@ -168,11 +168,12 @@ class ReportForm(ModelForm):
 class PImportedForm(ModelForm):
     class Meta:
         model = PImported
-        fields = ['article_id', 'article_code', 'article_designation', 'qte', 'prix_exw', 'tcs', 'dd', 'daps', 'nbr_blt']
+        fields = ['is_immo', 'article_id', 'article_code', 'article_designation', 'qte', 'prix_exw', 'tcs', 'dd', 'daps', 'nbr_blt']
     
     min_max = {'max': '100', 'min': '0'}
     min = {'min': '0'}
 
+    is_immo = forms.BooleanField(label='Immo ?', required=False, widget=forms.CheckboxInput(attrs={'type': 'checkbox', 'class': 'immo-input-td'}))
     article_code = forms.CharField(label='Code', widget=forms.TextInput(attrs=getAttrs('controlSearchTDReq','Code')))
     article_designation = forms.CharField(label='Designation', widget=forms.TextInput(attrs=getAttrs('controlReq','Designation', {'disabled': 'disabled'})))
     # article_designation = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq','Designation')))
@@ -186,6 +187,5 @@ class PImportedForm(ModelForm):
     nbr_blt = forms.FloatField(label='Nombre Palletes', widget=forms.NumberInput(attrs= getAttrs('controlReq','Nombre Palletes')))
     #repartition = forms.FloatField(label='Répartition', widget=forms.NumberInput(attrs= getAttrs('controlReq','Répartition', min)))
 
-PImportedsFormSet = inlineformset_factory(Report, PImported, form=PImportedForm, 
-                                          fields=['article_code', 'article_designation', 'article_id', 'qte', 'prix_exw', 
+PImportedsFormSet = inlineformset_factory(Report, PImported, form=PImportedForm, fields=['is_immo', 'article_code', 'article_designation', 'article_id', 'qte', 'prix_exw', 
                                                   'tcs', 'dd', 'daps', 'nbr_blt'], extra=0)

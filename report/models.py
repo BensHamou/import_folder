@@ -167,6 +167,7 @@ class PImported(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
+    is_immo = models.BooleanField(default=False)
     article_id = models.IntegerField(blank=True, null=True)
     article_code = models.CharField(max_length=255, blank=True, null=True)
     article_designation = models.CharField(max_length=255, blank=True, null=True)
