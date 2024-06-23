@@ -796,9 +796,6 @@ Rapport
         var button = document.getElementById('toggleButton');
         var reportSection = document.getElementById('detailReport');
         var productsSection = document.getElementById('detailProducts');
-
-        console.log(reportSection.style.display)
-        console.log(productsSection.style.display)
         if (reportSection.style.display === 'none') {
             reportSection.style.display = 'block';
             productsSection.style.display = 'none';
@@ -922,7 +919,7 @@ Rapport
                         if (response.length > 0) {
                             for (var i = 0; i < response.length; i++) {
                                 var result = response[i];
-                                suggestionsHTML += `<div class="suggestion" onClick="setValueTD(this, ${result.id}, '${result.name}')">${result.code}</div>`;
+                                suggestionsHTML += `<div class="suggestion" onClick='setValueTD(this, ${result.id}, ${JSON.stringify(result.name)})'>${result.code}</div>`;
                             }
                             suggestions.html(suggestionsHTML);
                             suggestions.removeClass('loading');
@@ -967,7 +964,7 @@ Rapport
                             if (response.length > 0) {
                                 for (var i = 0; i < response.length; i++) {
                                     var result = response[i];
-                                    suggestionsHTML += `<div class="suggestion" onClick="setValueTD(this, ${result.id}, '${result.name}')">${result.code}</div>`;
+                                    suggestionsHTML += `<div class="suggestion" onClick='setValueTD(this, ${result.id}, ${JSON.stringify(result.name)})'>${result.code}</div>`;
                                 }
                                 suggestions.html(suggestionsHTML);
                                 suggestions.removeClass('loading');
