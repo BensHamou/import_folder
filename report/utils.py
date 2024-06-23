@@ -24,9 +24,14 @@ def getFournisseurId(supplier_name):
     return execute_query(query, params)
 
 def getProductId(product_name):
-    query = """SELECT pt.id, pt.name, pt.template_code 
-                FROM product_template pt
+    # query = """SELECT pt.id, pt.name, pt.template_code 
+    #             FROM product_template pt
+    #             LEFT JOIN product_template_company_allowed_rel ptc on pt.id = ptc.template_id
+    #             WHERE pt.template_code ILIKE %s AND (pt.company_id = 8 OR ptc.company_id = 8) LIMIT 5;"""
+    query = """SELECT pp.id, pp.name_template, pp.default_code 
+                FROM product_product pp
+                LEFT JOIN product_template pt on pt.id = pp.product_tmpl_id
                 LEFT JOIN product_template_company_allowed_rel ptc on pt.id = ptc.template_id
-                WHERE pt.template_code ILIKE %s AND (pt.company_id = 8 OR ptc.company_id = 8) LIMIT 5;"""
+                WHERE pp.default_code ILIKE %s AND (pt.company_id = 8 OR ptc.company_id = 8) LIMIT 5;"""
     params = ('%' + product_name.upper() + '%',)
     return execute_query(query, params)

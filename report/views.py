@@ -404,7 +404,6 @@ def delete_report(request, pk):
     redirect_url = f'{url_path}?cache={cache_param}'
     return redirect(redirect_url)
 
-
 @login_required(login_url='login')
 @check_creatorPImported
 def delete_product(request, pk):
