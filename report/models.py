@@ -66,6 +66,7 @@ class Report(models.Model):
 
     n_report = models.IntegerField(blank=True, null=True)
     ref_folder = models.CharField(max_length=150)
+    date_folder = models.DateField(blank=True, null=True)
 
     fournisseur_id = models.IntegerField()
     fournisseur = models.CharField(max_length=255)

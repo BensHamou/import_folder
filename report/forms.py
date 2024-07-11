@@ -81,7 +81,7 @@ class BudgetCostForm(ModelForm):
 class ReportForm(ModelForm):
     class Meta:
         model = Report
-        fields = ['creator', 'ref_folder', 'site', 'fournisseur', 'fournisseur_id', 'n_facture', 'lieu_decharge', 'port_decharge', 'transitor', 'n_facture2', 
+        fields = ['creator', 'ref_folder', 'date_folder', 'site', 'fournisseur', 'fournisseur_id', 'n_facture', 'lieu_decharge', 'port_decharge', 'transitor', 'n_facture2', 
                   'tc_40', 'tc_20', 'date_in_stock', 'date_calc_cost', 'exchange_rate', 'facture_amount', 'facture_fees', 'fret_currency', 'facture_currency', 
                   'ladding_bill', 'shopping', 'customs', 'tcs', 'daps', 'dd', 'customs_honorary', 'local_transport', 'other_fees', 'surestaries'
                   , 'local_currency', 'observation']
@@ -90,6 +90,7 @@ class ReportForm(ModelForm):
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.Select(attrs=getAttrs('select2')), empty_label="Utilisateur")
     # n_report = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','N° Rapport')))
     ref_folder = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq','N° de dossier')))
+    date_folder = forms.DateField(widget=forms.DateInput(attrs=getAttrs('dateReq','Date dossier')))
 
     site = forms.ModelChoiceField(queryset=Site.objects.all(), widget=forms.Select(attrs= getAttrs('select2')), empty_label="Site")
 

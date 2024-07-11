@@ -78,6 +78,23 @@ Rapport
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="form-group row">
+                        <label class="col-sm-4 col-form-label labelCustom" for="date_folder">Date dossier</label>
+                        <div class="col-sm-8">
+                            <div class="form-outline">
+                                {{ form.date_folder }}
+                                {% if form.date_folder.errors %}
+                                    <div style="color: red;">
+                                        {% for error in form.date_folder.errors %}
+                                            *{{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
+                    <div class="form-group row">
                         <label class="col-sm-4 col-form-label labelCustom" for="n_facture">Facture Fournisseur</label>
                         <div class="col-sm-8">
                             <div class="form-outline">
