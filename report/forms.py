@@ -90,7 +90,7 @@ class ReportForm(ModelForm):
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.Select(attrs=getAttrs('select2')), empty_label="Utilisateur")
     # n_report = forms.IntegerField(widget=forms.NumberInput(attrs= getAttrs('controlReq','N° Rapport')))
     ref_folder = forms.CharField(widget=forms.TextInput(attrs=getAttrs('controlReq','N° de dossier')))
-    date_folder = forms.DateField(widget=forms.DateInput(attrs=getAttrs('dateReq','Date dossier')))
+    date_folder = forms.DateField(widget=forms.DateInput(attrs=getAttrs('dateReq','Date dossier'), format='%Y-%m-%d'))
 
     site = forms.ModelChoiceField(queryset=Site.objects.all(), widget=forms.Select(attrs= getAttrs('select2')), empty_label="Site")
 
@@ -169,7 +169,7 @@ class ReportForm(ModelForm):
 class PImportedForm(ModelForm):
     class Meta:
         model = PImported
-        fields = ['is_immo', 'article_id', 'article_code', 'article_designation', 'qte', 'prix_exw', 'tcs', 'dd', 'daps', 'nbr_blt']
+        fields = ['is_immo', 'article_id', 'article_code', 'article_designation', 'qte', 'prix_exw', 'tcs', 'dd', 'daps', 'onml', 'nbr_blt']
     
     min_max = {'max': '100', 'min': '0'}
     min = {'min': '0'}
@@ -184,9 +184,10 @@ class PImportedForm(ModelForm):
     tcs = forms.FloatField(label='TCS', widget=forms.NumberInput(attrs= getAttrs('control','TCS', min_max)), required=False)
     dd = forms.FloatField(label='DD', widget=forms.NumberInput(attrs= getAttrs('control','DD', min)), required=False)
     daps = forms.FloatField(label='DAPS', widget=forms.NumberInput(attrs= getAttrs('control','DAPS', min)), required=False)
+    onml = forms.FloatField(label='ONML', widget=forms.NumberInput(attrs= getAttrs('control','ONML', min)), required=False)
     
     nbr_blt = forms.FloatField(label='Nombre Palletes', widget=forms.NumberInput(attrs= getAttrs('controlReq','Nombre Palletes')))
     #repartition = forms.FloatField(label='Répartition', widget=forms.NumberInput(attrs= getAttrs('controlReq','Répartition', min)))
 
 PImportedsFormSet = inlineformset_factory(Report, PImported, form=PImportedForm, fields=['is_immo', 'article_code', 'article_designation', 'article_id', 'qte', 'prix_exw', 
-                                                  'tcs', 'dd', 'daps', 'nbr_blt'], extra=0)
+                                                  'tcs', 'dd', 'daps', 'onml', 'nbr_blt'], extra=0)

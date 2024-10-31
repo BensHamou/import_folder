@@ -260,6 +260,14 @@ Rapport - {{ report.ref_folder }}
                     </div>
                 </div>
                 <div class="form-group row mb-1">
+                    <label class="col-sm-5 col-form-label" style="color: #0C2858;">ONML</label>
+                    <div class="col-sm-7">
+                        <div class="form-control-plaintext text-detail monetary">
+                            {% if report.total_onml %}{{ report.total_onml|intcomma }} {{ report.local_currency }}{% else %}/{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
                     <label class="col-sm-5 col-form-label" style="color: #0C2858;">DD</label>
                     <div class="col-sm-7">
                         <div class="form-control-plaintext text-detail monetary">
@@ -330,6 +338,7 @@ Rapport - {{ report.ref_folder }}
                 <th class="d-none d-md-table-cell">Montant DD</th>
                 <th class="d-none d-md-table-cell">DAPS</th>
                 <th class="d-none d-md-table-cell">Montant DAPS</th>
+                <th class="d-none d-md-table-cell">ONML</th>
                 <th class="d-none d-md-table-cell">Montant Divers</th>
                 <th class="d-none d-md-table-cell">Total</th>
                 <th class="d-none d-md-table-cell">Coût / U</th>
@@ -407,6 +416,12 @@ Rapport - {{ report.ref_folder }}
                         </td>
                         <td>
                             <div>
+                                <p class="tdLabel">ONML</p>
+                                <p class="valueLead mb-0">{% if pimported.onml > 0 %}{{ pimported.onml|floatformat:"2g" }} {{ pimported.local_currency }}{% else %}/{% endif %}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
                                 <p class="tdLabel">Montant Divers</p>
                                 <p class="valueLead mb-0">{{ pimported.mnt_diver|floatformat:"2g" }} {{ pimported.local_currency }}</p>
                             </div>
@@ -473,6 +488,7 @@ Rapport - {{ report.ref_folder }}
                     <td class="d-none d-md-table-cell"></td>
                     <td class="d-none d-md-table-cell"></td>
                     <td class="d-none d-md-table-cell"></td>
+                    <td class="d-none d-md-table-cell"></td>
                 </tr>
                 <tr class="trS">
                     <td>
@@ -521,6 +537,7 @@ Rapport - {{ report.ref_folder }}
                             <p class="valueLead mb-0">{{report.total_products_mnt_daps|intcomma}} {{report.local_currency}}</p>
                         </div>
                     </td>
+                    <td></td>
                     <td>
                         <div>
                             <p class="tdLabel">Montant Divers Total</p>

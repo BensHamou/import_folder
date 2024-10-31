@@ -111,7 +111,7 @@ class Report(models.Model):
         if self.fret_currency != self.local_currency:
             fret = fret * self.exchange_rate
         return round(( self.facture_amount  * self.exchange_rate + fret + self.ladding_bill + self.shopping + 
-                self.customs + tcs + daps + dd + self.customs_honorary + self.local_transport + self.other_fees + self.surestaries), 2)
+                self.customs + tcs + daps + dd + self.customs_honorary + self.local_transport + self.other_fees + self.total_onml + self.surestaries), 2)
 
     @property
     def total_products_qte(self):
@@ -146,6 +146,10 @@ class Report(models.Model):
         return round(sum([product.total for product in self.pimported_set.all()]), 2)
 
     @property
+    def total_onml(self):
+        return round(sum([product.onml for product in self.pimported_set.all()]), 2)
+
+    @property
     def total_products_nbr_plt(self):
         return round(sum([product.nbr_blt for product in self.pimported_set.all()]), 2)
 
@@ -177,6 +181,7 @@ class PImported(models.Model):
     tcs = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)],null=True)
     dd = models.FloatField(default=0, validators=[MinValueValidator(0)], null=True)
     daps = models.FloatField(default=0, validators=[MinValueValidator(0)], null=True)
+    onml = models.FloatField(default=0, validators=[MinValueValidator(0)], null=True)
     
     nbr_blt = models.FloatField(default=0, validators=[MinValueValidator(0)])
     # nbr_blt = models.IntegerField(default=0, validators=[MinValueValidator(0)])
