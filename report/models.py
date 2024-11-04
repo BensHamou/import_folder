@@ -147,7 +147,7 @@ class Report(models.Model):
 
     @property
     def total_onml(self):
-        return round(sum([product.onml for product in self.pimported_set.all()]), 2)
+        return round(sum([product.onml or 0 for product in self.pimported_set.all()]), 2)
 
     @property
     def total_products_nbr_plt(self):
