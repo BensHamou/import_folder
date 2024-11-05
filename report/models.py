@@ -240,11 +240,11 @@ class PImported(models.Model):
     
     @property
     def total(self):
-        return round((self.dzd + self.mnt_tcs + self.mnt_dd + self.mnt_daps + self.mnt_diver), 9)
+        return round((self.dzd + self.mnt_tcs + self.mnt_dd + self.mnt_daps + self.mnt_diver + self.onml), 9)
     
     @property
     def cost_u(self):
-        return round((self.total + self.onml) / self.qte, 6)
+        return round(self.total / self.qte, 6)
 
     def __str__(self):
         return self.article_code + self.article_designation + " - " + str(self.repartition) + "% (R" + str(self.report.id) +")"
