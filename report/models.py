@@ -240,7 +240,7 @@ class PImported(models.Model):
     
     @property
     def total(self):
-        return round((self.dzd + self.mnt_tcs + self.mnt_dd + self.mnt_daps + self.mnt_diver + self.onml), 9)
+        return round((self.dzd + self.mnt_tcs + self.mnt_dd + self.mnt_daps + self.mnt_diver + (self.onml or 0) ), 9)
     
     @property
     def cost_u(self):
