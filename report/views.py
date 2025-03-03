@@ -437,7 +437,7 @@ def confirmReport(request, pk):
         report.save()
 
     subject = f'Rapport de dossier d\'importation [{report.id}]'
-    address = 'http://10.10.10.53:8022/report/'
+    address = 'http://pumaimportation.grupopuma-dz.com/report/'
     message = f'''
             <p>Bonjour l'équipe,</p>
             <p>Un rapport a été créé par <b style="color: #002060">{report.creator.fullname}</b></p>
