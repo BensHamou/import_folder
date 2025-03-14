@@ -449,8 +449,8 @@ def confirmReport(request, pk):
         new_ref = pimported.report.ref_folder
         article = f'[{pimported.article_code}] {pimported.article_designation}'
         
-        prev_importation = PImported.objects.exclude(id=pimported.id).filter(article_id=pimported.article_id).order_by('-report__date_calc_cost').first()
-        budget_obj = BudgetCost.objects.filter(article_id=pimported.article_id).first()
+        prev_importation = PImported.objects.exclude(id=pimported.id).filter(article_code=pimported.article_code).order_by('-report__date_calc_cost').first()
+        budget_obj = BudgetCost.objects.filter(article_code=pimported.article_code).first()
         if not budget_obj:
             cb, tr= 'Budget non renseigné.', 0
         else:
@@ -481,7 +481,7 @@ def confirmReport(request, pk):
     if report.site.address:
         recipient_list = report.site.address.split('&')
     else:
-        recipient_list = ['benshamou@gmail.com'] 
+        recipient_list = ['mohammed.benslimane@groupe-hasnaoui.com'] 
 
     messages.success(request, 'Rapport validé avec succès')
     send_mail(subject, "", 'Puma Dossier d\'Importation', recipient_list, html_message=formatHtml)
