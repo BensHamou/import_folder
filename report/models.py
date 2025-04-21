@@ -204,7 +204,11 @@ class PImported(models.Model):
 
     @property
     def repartition(self):
-        return round(self.nbr_blt / self.report.total_products_nbr_plt * 100, 4)
+        total_per = self.report.total_products_nbr_plt * 100
+        if total_per == 0:
+            return 0
+        else:
+            return round(self.nbr_blt / total_per, 4)
 
 
     @property
