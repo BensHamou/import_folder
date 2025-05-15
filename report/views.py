@@ -454,7 +454,7 @@ def confirmReport(request, pk):
         if not budget_obj:
             cb, tr= 'Budget non renseigné.', 0
         else:
-            cb, tr = budget_obj.budget, round(budget_obj.budget / new_cost, 2)
+            cb, tr = budget_obj.budget, round(new_cost / budget_obj.budget, 2)
         if prev_importation:
             found = True
             old_cost = round(prev_importation.cost_u, 3)
@@ -497,6 +497,9 @@ def getArticleTable(old_cost, new_cost, cb, tr, old_ref, new_ref, article):
     emojiR = '⬆️' if tr >= 1 else '⬇️'
     if isinstance(cb, float):
         cb = f'{round(cb, 3):,.2f}'
+
+    bud_cost = ((new_cost - old_cost) / old_cost) * 100
+
     table = f'<br><p>Produit <b style="color: #002060">{article}:</b></p><br>'
     table += '<table style="border-collapse: collapse; text-align: center; width: 100%;">'
     table += '<thead><tr><th></th>'
@@ -510,7 +513,7 @@ def getArticleTable(old_cost, new_cost, cb, tr, old_ref, new_ref, article):
     table += f'<td style="color: black; background-color: #f2f2f2; border-bottom: 1px solid black;">{round(old_cost, 3):,.2f}</td>'
     table += f'<td style="color: black; background-color: #f2f2f2; border-bottom: 1px solid black;">{round(new_cost, 3):,.2f}</td>'
     table += f'<td style="color: black; background-color: #f2f2f2; border-bottom: 1px solid black;">{cb}</td>'
-    table += f'<td style="color: {colorE}; background-color: #f2f2f2; border-bottom: 1px solid black;"><b>{round(old_cost / new_cost, 2):,.2f}% {emojiE}</b></td>'
+    table += f'<td style="color: {colorE}; background-color: #f2f2f2; border-bottom: 1px solid black;"><b>{bud_cost:,.2f}% {emojiE}</b></td>'
     table += f'<td style="color: {colorR}; background-color: #f2f2f2; border-bottom: 1px solid black;"><b>{tr}% {emojiR}</b></td>'
     table += '</tr>'
     table += '<tr><td style="color: white; background-color: #002060;">N° dossier</td>'
