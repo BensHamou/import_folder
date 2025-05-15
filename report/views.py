@@ -483,8 +483,6 @@ def confirmReport(request, pk):
     else:
         recipient_list = ['mohammed.benslimane@groupe-hasnaoui.com'] 
 
-    recipient_list = ['mohammed.benslimane@groupe-hasnaoui.com', 'Fouzia.sadallah@grupopuma-dz.com'] 
-
     messages.success(request, 'Rapport validé avec succès')
     send_mail(subject, "", 'Puma Dossier d\'Importation', recipient_list, html_message=formatHtml)
     url_path = reverse('view_report', args=[report.id])
