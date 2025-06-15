@@ -501,7 +501,7 @@ def getArticleTable(old_cost, new_cost, cb, tr, old_ref, new_ref, article):
     if old_cost > 0:
         bud_cost = ((new_cost - old_cost) / old_cost) * 100
     else:
-        bud_cost = new_cost
+        bud_cost = 0
 
     table = f'<br><p>Produit <b style="color: #002060">{article}:</b></p><br>'
     table += '<table style="border-collapse: collapse; text-align: center; width: 100%;">'
